@@ -1,4 +1,4 @@
-# games
+# Terminal Games
 
 一些 C++ 控制台小游戏。
 
@@ -8,7 +8,7 @@
 
 **俄罗斯方块 (tetris) [Windows]**
 
-玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-BAG 和 SRS 旋转系统，支持在 `config.h` 文件中修改部分配置。
+玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-Bag 和 SRS 旋转系统，支持在 `config.h` 文件中修改部分配置。
 
 **斗地主联机 [Linux]**
 
