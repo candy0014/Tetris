@@ -38,7 +38,6 @@ int main(){
 	sock.bind(3000);
 	for(int i=0;i<3;i++){
 		pl[i]=sock.receive();
-		cout<<i<<"\n";
 	}
 	while(1){
 		Card.clear();
