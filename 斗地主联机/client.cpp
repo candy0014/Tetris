@@ -31,7 +31,12 @@ void send(string s){
 int len[3];
 string _name,name[3];
 void print(){
+	#ifdef _WIN32
+	system("cls");
+	#endif
+	#ifdef __linux__
 	system("clear");
+	#endif
 	for(int i=0;i<3;i++){
 		cout<<"Player "<<i<<" ("<<name[i]<<"): ";
 		if(i==num){
@@ -43,18 +48,26 @@ void print(){
 	}
 }
 int main(){
+	#ifdef _WIN32
+	system("chcp 65001");system("cls");
+	#endif
 	memset(cc,-1,sizeof(cc));
 	for(int i=0;i<=14;i++) cc[c[i]]=i;
 	int my_port=rd()%5000+3000;
 	sock.bind(my_port);
 	cout<<"Enter the IP address of the server:\n";
-	server_id="";
+	// server_id="";
 	cin>>server_id;
 	cout<<"Enter your username:\n";
 	cin>>_name;
 	send(_name);
 	while(1){
+		#ifdef _WIN32
+		system("cls");
+		#endif
+		#ifdef __linux__
 		system("clear");
+		#endif
 		card.clear();
 		for(int i=0;i<3;i++) name[i]=get();
 		num=string_to_int(get());
