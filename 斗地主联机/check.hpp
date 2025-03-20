@@ -54,16 +54,20 @@ namespace Check{
 			if(flag2&&flag3) return Type{5,0,la};
 		}
 		if(sz>=5){
-			if(p.back()<=11&&p.back()-p[0]+1==sz&&p.back()!=12) return Type{6,sz,p[0]};
+			int flag=0;
+			for(int i=0;i+1<(int)sz;i++) flag|=(p[i]+1!=p[i+1]);
+			if(!flag&&p.back()<=11&&p.back()-p[0]+1==sz&&p.back()!=12) return Type{6,sz,p[0]};
 		}
 		if(sz>=6&&sz%2==0){
 			int flag=0;
 			for(int i=0;i<(int)sz;i+=2) flag|=(p[i]!=p[i+1]);
+			for(int i=1;i+1<(int)sz;i+=2) flag|=(p[i]+1!=p[i+1]);
 			if(!flag&&p.back()-p[0]+1==sz/2&&p.back()!=12) return Type{7,sz/2,p[0]};
 		}
 		if(sz>=6&&sz%3==0){
 			int flag=0;
 			for(int i=0;i<(int)sz;i+=3) flag|=(p[i]!=p[i+2]);
+			for(int i=2;i+1<(int)sz;i+=3) flag|=(p[i]+1!=p[i+1]);
 			if(!flag&&p.back()-p[0]+1==sz/3&&p.back()!=12) return Type{8,sz/3,p[0]};
 		}
 		if(sz==6){

@@ -119,6 +119,10 @@ int main(){
 		cout<<"\n\n";
 		if(!len[0]) cout<<"Landlord Wins!\n";
 		else cout<<"Farmers Win!\n";
+		cout<<"\n";
+		for(int i=0;i<3;i++){
+			cout<<name[i]<<"\'s score: "<<get()<<"\n";
+		}
 		cout<<"\n"<<"Enter anything to continue: ";
 		string str;
 		cin>>str;

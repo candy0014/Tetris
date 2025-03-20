@@ -22,7 +22,7 @@ Socket::UDP sock;
 Socket::Datagram pl[3];
 string get(int id=-1){
 	Socket::Datagram tmp=sock.receive();
-	assert(id==-1||tmp.address.ip==pl[id].address.ip);
+	// assert(id==-1||tmp.address.ip==pl[id].address.ip);
 	return tmp.data;
 }
 void send(int id,string s){
@@ -32,6 +32,7 @@ vector<int>Card;
 multiset<int>card[3];
 int ld=0;
 int len[3];
+map<string,int> score;
 int main(){
 	memset(cc,-1,sizeof(cc));
 	for(int i=0;i<=14;i++) cc[c[i]]=i;
@@ -88,6 +89,14 @@ int main(){
 			for(auto x:s) last.emplace_back(x);
 			now=(now+1)%3;
 		}
+		if(!len[0]){
+			score[pl[0].data]+=3;
+		}
+		else{
+			score[pl[1].data]++;
+			score[pl[2].data]++;
+		}
+		for(int i=0;i<3;i++) for(int j=0;j<3;j++) send(j,int_to_string(score[pl[i].data]));
 		get(),get(),get();
 		for(int i=0;i<3;i++) send(i,"continue");
 	}
