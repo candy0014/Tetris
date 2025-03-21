@@ -18,6 +18,11 @@ int string_to_int(string s){
 }
 string c="3456789TJQKA2XY";
 int cc[256];
+vector<int> string_to_vector(string str){
+	vector<int>s;
+	for(int i=0;str[i];i++) s.emplace_back(cc[str[i]]);
+	return s;
+}
 Socket::UDP sock;
 Socket::Datagram pl[3];
 string get(int id=-1){
@@ -67,7 +72,7 @@ int main(){
 			while(1){
 				str=get(now);
 				s.clear();
-				if(str=="dc"&&last.size()) break;
+				if(str=="DC"&&last.size()) break;
 				for(int i=0;str[i];i++) s.emplace_back(cc[str[i]]);
 				if(Check::check(s).type==-1){send(now,"no");continue;}
 				multiset<int>tmp=card[now];
@@ -83,7 +88,7 @@ int main(){
 			for(auto x:s) card[now].erase(card[now].find(x));
 			send(now,"yes");
 			for(int i=0;i<3;i++) send(i,str);
-			if(str=="dc"){now=(now+1)%3;continue;}
+			if(str=="DC"){now=(now+1)%3;continue;}
 			len[now]-=str.length();
 			la=now,last.clear();
 			for(auto x:s) last.emplace_back(x);

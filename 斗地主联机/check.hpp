@@ -17,9 +17,10 @@ namespace Check{
 		6: 顺子
 		7: 连对
 		8: 三顺
-		9: 四带二
-		10: 单翅膀飞机
-		11: 双翅膀飞机
+		9: 四带二单牌
+		10: 四带二对子
+		11: 单翅膀飞机
+		12: 双翅膀飞机
 		*/
 		int val;
 	};
@@ -69,16 +70,28 @@ namespace Check{
 			if(!flag&&p.back()<=11) return Type{8,sz/3,p[0]};
 		}
 		if(sz==6){
-			for(int i=0;i<=14;i++) if(cnt[i]==4) return Type{9,0,i};
+			for(int i=0;i<=12;i++) if(cnt[i]==4){
+				if(!cnt[13]||!cnt[14]) return Type{9,0,i};
+			}
+		}
+		if(sz==8){
+			int cnt2=0;
+			for(int i=0;i<=12;i++) cnt2+=(cnt[i]==2);
+			for(int i=0;i<=12;i++) if(cnt[i]==4&&cnt2==2) return Type{10,0,i};
 		}
 		if(sz>=8&&sz%4==0){
-			int cnt1=0;
-			for(int i=0;i<=14;i++) cnt1+=(cnt[i]==1||cnt[i]==4);
-			for(int i=0;i<=11;i++) if(cnt[i]>=3){
-				int j=i;
-				while(j<11&&cnt[j+1]>=3) j++;
-				if(j-i+1==sz/4&&cnt1==sz/4) return Type{10,sz/4,i};
-				break;
+			if(!cnt[13]||!cnt[14]){
+				for(int i=0;i<=11;i++) if(cnt[i]>=3){
+					int j=i;
+					while(j<11&&cnt[j+1]>=3) j++;
+					int cnt1=0;
+					for(int k=0;k<=14;k++){
+						if(i<=k&&k<=j) cnt1+=cnt[k]-3;
+						else if(cnt[k]==4){cnt1=0;break;}
+						else cnt1+=cnt[k];
+					}
+					if(j-i+1==sz/4&&cnt1==sz/4) return Type{11,sz/4,i};
+				}
 			}
 		}
 		if(sz>=10&&sz%5==0){
@@ -87,7 +100,7 @@ namespace Check{
 			for(int i=0;i<=11;i++) if(cnt[i]==3){
 				int j=i;
 				while(j<11&&cnt[j+1]==3) j++;
-				if(j-i+1==sz/5&&cnt2==sz/5) return Type{11,sz/5,i};
+				if(j-i+1==sz/5&&cnt2==sz/5) return Type{12,sz/5,i};
 				break;
 			}
 		}

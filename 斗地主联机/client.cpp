@@ -29,7 +29,7 @@ void send(string s){
 	sock.send(server_id,3000,s);
 }
 int len[3];
-string _name,name[3];
+string _name,name[3],sname[3],ssname[3];
 void print(){
 	#ifdef _WIN32
 	system("cls");
@@ -38,7 +38,7 @@ void print(){
 	system("clear");
 	#endif
 	for(int i=0;i<3;i++){
-		cout<<"Player "<<i<<" ("<<name[i]<<"): ";
+		cout<<name[i]<<": ";
 		if(i==num){
 			for(auto x:card) cout<<c[x];cout<<"\n";
 		}
@@ -56,8 +56,8 @@ int main(){
 	int my_port=rd()%5000+3000;
 	sock.bind(my_port);
 	cout<<"Enter the IP address of the server:\n";
-	// server_id="";
-	cin>>server_id;
+	server_id="10.49.27.16";
+	// cin>>server_id;
 	cout<<"Enter your username:\n";
 	cin>>_name;
 	send(_name);
@@ -69,7 +69,11 @@ int main(){
 		system("clear");
 		#endif
 		card.clear();
-		for(int i=0;i<3;i++) name[i]=get();
+		for(int i=0;i<3;i++) name[i]=get(),ssname[i]=name[i];
+		name[0]+="[Lld]";
+		int name_len=0;
+		for(int i=0;i<3;i++) name_len=max(name_len,(int)name[i].length()),sname[i]=name[i];
+		for(int i=0;i<3;i++) while((int)name[i].length()<name_len) name[i]+=" ";
 		num=string_to_int(get());
 		for(int i=0;i<17;i++){
 			card.insert(string_to_int(get()));
@@ -84,36 +88,38 @@ int main(){
 		while(1){
 			print();
 			if(get()=="end") break;
-			cout<<"Now it's number "<<now<<" playing\n\n";
+			cout<<"\nNow it's "<<sname[now]<<"\'s turn\n\n";
 			if(la==now) last.clear();
 			if(last.size()){
-				cout<<"Player "<<la<<": ";
+				cout<<sname[la]<<": ";
 				sort(last.begin(),last.end());
 				for(auto x:last) cout<<c[x];
 				cout<<"\n";
 			}
 			if(now==num){
-				cout<<"You (Enter \"dc\" discard): ";
+				if(la!=now) cout<<"You (Enter \"DC\" discard): ";
+				else cout<<"You: ";
 				string str;
 				while(1){
 					cin>>str;
+					for(int i=0;str[i];i++) if('a'<=str[i]&&str[i]<='z') str[i]=str[i]-'a'+'A';
 					send(str);
 					string tmp=get();
 					if(tmp=="yes") break;
 				}
-				if(str!="dc"){
+				if(str!="DC"){
 					for(auto x:str) card.erase(card.find(cc[x]));
 				}
 			}
 			string str=get();
-			if(str=="dc"){now=(now+1)%3;continue;}
+			if(str=="DC"){now=(now+1)%3;continue;}
 			len[now]-=str.length();
 			la=now;
 			last.clear();
 			for(auto x:str) last.emplace_back(cc[x]);
 			now=(now+1)%3;
 		}
-		cout<<"Player "<<la<<": ";
+		cout<<sname[la]<<": ";
 		sort(last.begin(),last.end());
 		for(auto x:last) cout<<c[x];
 		cout<<"\n\n";
@@ -121,7 +127,7 @@ int main(){
 		else cout<<"Farmers Win!\n";
 		cout<<"\n";
 		for(int i=0;i<3;i++){
-			cout<<name[i]<<"\'s score: "<<get()<<"\n";
+			cout<<ssname[i]<<"\'s score: "<<get()<<"\n";
 		}
 		cout<<"\n"<<"Enter anything to continue: ";
 		string str;
