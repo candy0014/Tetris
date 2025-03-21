@@ -72,10 +72,13 @@ namespace Check{
 			for(int i=0;i<=14;i++) if(cnt[i]==4) return Type{9,0,i};
 		}
 		if(sz>=8&&sz%4==0){
+			int cnt1=0;
+			for(int i=0;i<=14;i++) cnt1+=(cnt[i]==1||cnt[i]==4);
 			for(int i=0;i<=11;i++) if(cnt[i]>=3){
 				int j=i;
 				while(j<11&&cnt[j+1]>=3) j++;
-				if(j-i+1==sz/4) return Type{10,sz/4,i};
+				if(j-i+1==sz/4&&cnt1==sz/4) return Type{10,sz/4,i};
+				break;
 			}
 		}
 		if(sz>=10&&sz%5==0){
@@ -85,6 +88,7 @@ namespace Check{
 				int j=i;
 				while(j<11&&cnt[j+1]==3) j++;
 				if(j-i+1==sz/5&&cnt2==sz/5) return Type{11,sz/5,i};
+				break;
 			}
 		}
 		return Type{-1,0,0};
