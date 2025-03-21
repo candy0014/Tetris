@@ -55,42 +55,37 @@ namespace Check{
 		}
 		if(sz>=5){
 			int flag=0;
-			for(int i=0;i+1<(int)sz;i++) flag|=(p[i]+1!=p[i+1]);
-			if(!flag&&p.back()<=11&&p.back()-p[0]+1==sz&&p.back()!=12) return Type{6,sz,p[0]};
+			for(int i=0;i<(int)sz;i++) flag|=(p[i]!=p[0]+i);
+			if(!flag&&p.back()<=11) return Type{6,sz,p[0]};
 		}
 		if(sz>=6&&sz%2==0){
 			int flag=0;
-			for(int i=0;i<(int)sz;i+=2) flag|=(p[i]!=p[i+1]);
-			for(int i=1;i+1<(int)sz;i+=2) flag|=(p[i]+1!=p[i+1]);
-			if(!flag&&p.back()-p[0]+1==sz/2&&p.back()!=12) return Type{7,sz/2,p[0]};
+			for(int i=0;i<(int)sz;i++) flag|=(p[i]!=p[0]+i/2);
+			if(!flag&&p.back()<=11) return Type{7,sz/2,p[0]};
 		}
 		if(sz>=6&&sz%3==0){
 			int flag=0;
-			for(int i=0;i<(int)sz;i+=3) flag|=(p[i]!=p[i+2]);
-			for(int i=2;i+1<(int)sz;i+=3) flag|=(p[i]+1!=p[i+1]);
-			if(!flag&&p.back()-p[0]+1==sz/3&&p.back()!=12) return Type{8,sz/3,p[0]};
+			for(int i=0;i<(int)sz;i++) flag|=(p[i]!=p[0]+i/3);
+			if(!flag&&p.back()<=11) return Type{8,sz/3,p[0]};
 		}
 		if(sz==6){
 			for(int i=0;i<=14;i++) if(cnt[i]==4) return Type{9,0,i};
 		}
 		if(sz>=8&&sz%4==0){
-			int st=-1,ed=-1;
-			for(int i=0;i<=12;i++) if(cnt[i]>=3){
-				if(st==-1) st=i;
-				ed=i;
+			for(int i=0;i<=11;i++) if(cnt[i]>=3){
+				int j=i;
+				while(j<11&&cnt[j+1]>=3) j++;
+				if(j-i+1==sz/4) return Type{10,sz/4,i};
 			}
-			if(ed-st+1==sz/4) return Type{10,sz/4,st};
 		}
 		if(sz>=10&&sz%5==0){
-			int st=-1,ed=-1,cnt2=0;
-			for(int i=0;i<=14;i++){
-				if(cnt[i]>=3&&i<=12){
-					if(st==-1) st=i;
-					ed=i;
-				}
-				cnt2+=(cnt[i]==2);
+			int cnt2=0;
+			for(int i=0;i<=12;i++) cnt2+=(cnt[i]==2);
+			for(int i=0;i<=11;i++) if(cnt[i]==3){
+				int j=i;
+				while(j<11&&cnt[j+1]==3) j++;
+				if(j-i+1==sz/5&&cnt2==sz/5) return Type{11,sz/5,i};
 			}
-			if(ed-st+1==sz/5&&cnt2==sz/5) return Type{11,sz/5,st};
 		}
 		return Type{-1,0,0};
 	}
