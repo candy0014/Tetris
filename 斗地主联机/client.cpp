@@ -56,8 +56,8 @@ int main(){
 	int my_port=rd()%5000+3000;
 	sock.bind(my_port);
 	cout<<"Enter the IP address of the server:\n";
-	server_id="10.49.27.16";
-	// cin>>server_id;
+	server_id="";
+	cin>>server_id;
 	cout<<"Enter your username:\n";
 	cin>>_name;
 	send(_name);
