@@ -89,7 +89,7 @@ struct block{
 		if(last_type==0&&type==3) op=7;
 		if(abs(last_type-type)==2) op=last_type*2,op2=(op+2)%8;
 		for(int i=0;i<5;i++) if(check(x-chk[op][i][1]-chk[op2][i][1],y+chk[op][i][0]+chk[op2][i][0],type,mp)){
-			x-=chk[op][i][1],y+=chk[op][i][0];
+			x-=chk[op][i][1]+chk[op2][i][1],y+=chk[op][i][0]+chk[op2][i][0];
 			return 1;
 		}
 		return 0;
