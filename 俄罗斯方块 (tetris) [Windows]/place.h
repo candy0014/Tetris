@@ -23,6 +23,12 @@ bool play(map &mp,Block::block B,int flag_h=0){
 		}
 	}
 	int cnt_op=0;
+	std::vector<int> kb_rotate,kb_move;
+	for(auto ii:KEY){
+		int i=(int)ii;
+		if(custom[i]=="F"||custom[i]=="CW"||custom[i]=="CCW") kb_rotate.emplace_back(i);
+		if(custom[i]=="L"||custom[i]=="R") kb_move.emplace_back(i);
+	}
 	while(1){
 		if(timer.get()-tim>EPLD){
 			if(!B.check(x+1,y,type,mp)) break;
@@ -59,39 +65,69 @@ bool play(map &mp,Block::block B,int flag_h=0){
 					return 1;
 				}
 				if(custom[i]=="F"){
-					int flag=!B.check(x+1,y,type,mp);
-					if(B.checks(x,y,type,(type+2)%4,mp)){
-						type=(type+2)%4,cnt_op+=flag;
-						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_rotate) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.checks(x,y,type,(type+2)%4,mp)){
+							type=(type+2)%4,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 				if(custom[i]=="CCW"){
-					int flag=!B.check(x+1,y,type,mp);
-					if(B.checks(x,y,type,(type+3)%4,mp)){
-						type=(type+3)%4,cnt_op+=flag;
-						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_rotate) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.checks(x,y,type,(type+3)%4,mp)){
+							type=(type+3)%4,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 				if(custom[i]=="CW"){
-					int flag=!B.check(x+1,y,type,mp);
-					if(B.checks(x,y,type,(type+1)%4,mp)){
-						type=(type+1)%4,cnt_op+=flag;
-						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_rotate) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.checks(x,y,type,(type+1)%4,mp)){
+							type=(type+1)%4,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 				if(custom[i]=="SD"&&B.check(x+1,y,type,mp)) x++,tim=timer.get();
 				if(custom[i]=="L"){
-					int flag=!B.check(x+1,y,type,mp);
-					if(B.check(x,y-1,type,mp)){
-						y--,cnt_op+=flag;
-						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_move) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.check(x,y-1,type,mp)){
+							y--,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 				if(custom[i]=="R"){
-					int flag=!B.check(x+1,y,type,mp);
-					if(B.check(x,y+1,type,mp)){
-						y++,cnt_op+=flag;
-						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_move) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.check(x,y+1,type,mp)){
+							y++,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 			}
@@ -108,9 +144,23 @@ bool play(map &mp,Block::block B,int flag_h=0){
 					}
 				}
 				if(custom[i]=="L"){
-					if(vis[i]==1){
-						if(timer.get()-t[i]>DAS){
-							t[i]=timer.get(),vis[i]=2;
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_move) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						if(vis[i]==1){
+							if(timer.get()-t[i]>DAS){
+								t[i]=timer.get(),vis[i]=2;
+								int flag=!B.check(x+1,y,type,mp);
+								if(B.check(x,y-1,type,mp)){
+									y--,cnt_op+=flag;
+									if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+								}
+							}
+						}
+						else if(timer.get()-t[i]>ARR){
+							t[i]=timer.get();
 							int flag=!B.check(x+1,y,type,mp);
 							if(B.check(x,y-1,type,mp)){
 								y--,cnt_op+=flag;
@@ -118,32 +168,30 @@ bool play(map &mp,Block::block B,int flag_h=0){
 							}
 						}
 					}
-					else if(timer.get()-t[i]>ARR){
-						t[i]=timer.get();
-						int flag=!B.check(x+1,y,type,mp);
-						if(B.check(x,y-1,type,mp)){
-							y--,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
-						}
-					}
 				}
 				if(custom[i]=="R"){
-					if(vis[i]==1){
-						if(timer.get()-t[i]>DAS){
-							t[i]=timer.get(),vis[i]=2;
+					double ma_tim=0;int mak=0;
+					for(auto d:kb_move) if(vis[d]){
+						if(ma_tim<t[d]) ma_tim=t[d],mak=d;
+					}
+					if(mak==i){
+						if(vis[i]==1){
+							if(timer.get()-t[i]>DAS){
+								t[i]=timer.get(),vis[i]=2;
+								int flag=!B.check(x+1,y,type,mp);
+								if(B.check(x,y+1,type,mp)){
+									y++,cnt_op+=flag;
+									if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+								}
+							}
+						}
+						else if(timer.get()-t[i]>ARR){
+							t[i]=timer.get();
 							int flag=!B.check(x+1,y,type,mp);
 							if(B.check(x,y+1,type,mp)){
 								y++,cnt_op+=flag;
 								if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
 							}
-						}
-					}
-					else if(timer.get()-t[i]>ARR){
-						t[i]=timer.get();
-						int flag=!B.check(x+1,y,type,mp);
-						if(B.check(x,y+1,type,mp)){
-							y++,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
 						}
 					}
 				}
