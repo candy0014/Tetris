@@ -22,7 +22,11 @@ bool play(map &mp,Block::block B,int flag_h=0){
 			vis[i]=-Interactive::keydown(i);
 		}
 	}
+	int cnt_op=0;
 	while(1){
+		if(timer.get()-tim>EPLD){
+			if(!B.check(x+1,y,type,mp)) break;
+		}
 		if(timer.get()-tim>SPE){
 			if(!B.check(x+1,y,type,mp)) break;
 			B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get();
@@ -55,12 +59,42 @@ bool play(map &mp,Block::block B,int flag_h=0){
 					B.put_hold(-1);
 					return 1;
 				}
-				if(custom[i]=="F"&&B.checks(x,y,type,(type+2)%4,mp)) type=(type+2)%4;
-				if(custom[i]=="CCW"&&B.checks(x,y,type,(type+3)%4,mp)) type=(type+3)%4;
-				if(custom[i]=="CW"&&B.checks(x,y,type,(type+1)%4,mp)) type=(type+1)%4;
+				if(custom[i]=="F"){
+					int flag=!B.check(x+1,y,type,mp);
+					if(B.checks(x,y,type,(type+2)%4,mp)){
+						type=(type+2)%4,cnt_op+=flag;
+						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					}
+				}
+				if(custom[i]=="CCW"){
+					int flag=!B.check(x+1,y,type,mp);
+					if(B.checks(x,y,type,(type+3)%4,mp)){
+						type=(type+3)%4,cnt_op+=flag;
+						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					}
+				}
+				if(custom[i]=="CW"){
+					int flag=!B.check(x+1,y,type,mp);
+					if(B.checks(x,y,type,(type+1)%4,mp)){
+						type=(type+1)%4,cnt_op+=flag;
+						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					}
+				}
 				if(custom[i]=="SD"&&B.check(x+1,y,type,mp)) x++,tim=timer.get();
-				if(custom[i]=="L"&&B.check(x,y-1,type,mp)) y--;
-				if(custom[i]=="R"&&B.check(x,y+1,type,mp)) y++;
+				if(custom[i]=="L"){
+					int flag=!B.check(x+1,y,type,mp);
+					if(B.check(x,y-1,type,mp)){
+						y--,cnt_op+=flag;
+						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					}
+				}
+				if(custom[i]=="R"){
+					int flag=!B.check(x+1,y,type,mp);
+					if(B.check(x,y+1,type,mp)){
+						y++,cnt_op+=flag;
+						if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+					}
+				}
 			}
 			else if(vis[i]&&tmp){
 				if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F") continue;
@@ -78,24 +112,40 @@ bool play(map &mp,Block::block B,int flag_h=0){
 					if(vis[i]==1){
 						if(timer.get()-t[i]>DAS){
 							t[i]=timer.get(),vis[i]=2;
-							if(B.check(x,y-1,type,mp)) y--;
+							int flag=!B.check(x+1,y,type,mp);
+							if(B.check(x,y-1,type,mp)){
+								y--,cnt_op+=flag;
+								if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+							}
 						}
 					}
 					else if(timer.get()-t[i]>ARR){
 						t[i]=timer.get();
-						if(B.check(x,y-1,type,mp)) y--;
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.check(x,y-1,type,mp)){
+							y--,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 				if(custom[i]=="R"){
 					if(vis[i]==1){
 						if(timer.get()-t[i]>DAS){
 							t[i]=timer.get(),vis[i]=2;
-							if(B.check(x,y+1,type,mp)) y++;
+							int flag=!B.check(x+1,y,type,mp);
+							if(B.check(x,y+1,type,mp)){
+								y++,cnt_op+=flag;
+								if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+							}
 						}
 					}
 					else if(timer.get()-t[i]>ARR){
 						t[i]=timer.get();
-						if(B.check(x,y+1,type,mp)) y++;
+						int flag=!B.check(x+1,y,type,mp);
+						if(B.check(x,y+1,type,mp)){
+							y++,cnt_op+=flag;
+							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+						}
 					}
 				}
 			}
