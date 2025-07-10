@@ -28,8 +28,7 @@ bool play(map &mp,Block::block B,int flag_h=0){
 			if(!B.check(x+1,y,type,mp)) break;
 		}
 		if(timer.get()-tim>SPE){
-			if(!B.check(x+1,y,type,mp)) break;
-			B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get();
+			if(B.check(x+1,y,type,mp)) B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get();
 		}
 		int last_x=x,last_y=y,last_type=type;
 		bool flag_hd=0;
