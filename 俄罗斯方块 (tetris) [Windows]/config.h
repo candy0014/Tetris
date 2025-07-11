@@ -18,6 +18,8 @@ constexpr int mapHeight = 20; //地图高度
 constexpr int Next_num=5; //Next 显示个数，设为 0 则不显示
 constexpr int Open_hold=1; //是否允许 Hold
 constexpr int EPLD_lim=15; //移动重置重置次数限制
+constexpr int Invisible=0; //启用隐形块
+constexpr int Ghost=1; //阴影块（方块落点）
 constexpr int FSBorYPA=0; //开起来试试？（防教练用
 
 constexpr int Bag=1000000;

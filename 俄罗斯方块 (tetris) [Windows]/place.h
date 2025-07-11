@@ -11,6 +11,16 @@ namespace Place{
 int play(map &mp,Block::block B,int flag_h=0){
 	int x=-2,y=(mapWidth-1)/2,type=0;
 	if(!B.check(x,y,type,mp)){
+		if(Invisible){
+			for(int i=mapHeightP-1;i>=-mapHeightN;i--){
+				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=-1){
+					Interactive::go(i,j);
+					Interactive::setcol(mp[i][j]);
+					std::cout<<"█ ";
+				}
+			}
+			Sleep(500);
+		} 
 		Sleep(1000);
 		return 2;
 	}
@@ -206,6 +216,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		if(flag_hd) break;
 	}
+	if(Invisible){
+		B.put(x,y,type,mp,0);
+	}
 	for(int i=0;i<4;i++) mp[x+B.shape[type][i][0]][y+B.shape[type][i][1]]=B.ty;
 	int tag[105],cnt_clear=0;
 	for(int i=-mapHeightN;i<mapHeightP;i++){
@@ -249,8 +262,10 @@ int play(map &mp,Block::block B,int flag_h=0){
 		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[now][j]){
 			Interactive::go(i,j);
 			Interactive::setcol(mp[now][j]);
-			if(mp[now][j]==-1) std::cout<<"  ";
-			else std::cout<<"█ ";
+			if(!Invisible){
+				if(mp[now][j]==-1) std::cout<<"  ";
+				else std::cout<<"█ ";
+			}
 		}
 		mp[i]=mp[now];
 	}

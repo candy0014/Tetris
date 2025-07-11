@@ -65,7 +65,8 @@ struct block{
 	void put(int x,int y,int type,map mp,int op=1){
 		int xx=x;
 		while(check(xx+1,y,type,mp)) xx++;
-		put_block(xx,y,type,-op),put_block(x,y,type,op);
+		if(Ghost) put_block(xx,y,type,-op);
+		put_block(x,y,type,op);
 	}
 	void put_hold(int op=1){
 		if(op==1) Interactive::setcol(ty);
