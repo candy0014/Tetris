@@ -224,6 +224,20 @@ int play(map &mp,Block::block B,int flag_h=0){
 		if(cnt_clear==2) std::cout<<"ＤＯＵＢＬＥ";
 		if(cnt_clear==3) std::cout<<"ＴＲＩＰＬＥ";
 		if(cnt_clear==4) std::cout<<"ＱＵＡＤ　　";
+		Interactive::go(9,-8,1);
+		std::cout<<"  　　　　　";
+		Interactive::go(9,-8,1);
+		if(cnt_clear){
+			Init::combo++;
+			if(Init::combo>=2){
+				Interactive::rgb_set(139,185,61);
+				std::cout<<Init::combo-1;
+				if(Init::combo-1<10) std::cout<<" ";
+				Interactive::rgb_set(255,255,255);
+				std::cout<<"ＣＯＭＢＯ";
+			}
+		}
+		else Init::combo=0;
 		Interactive::go(mapHeightP+2,0);
 	}
 	int now=mapHeightP,flag=0;

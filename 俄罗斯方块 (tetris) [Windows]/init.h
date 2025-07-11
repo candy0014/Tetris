@@ -13,6 +13,7 @@ namespace Init{
 short bl[Bag*7];
 std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 short now_hold;
+int combo;
 void cur_hide(){CONSOLE_CURSOR_INFO cur={1,0};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE),&cur);}
 void cur_show(){CONSOLE_CURSOR_INFO cur={1,1};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE),&cur);}
 void rgb_init(){
@@ -28,7 +29,7 @@ void rgb_init(){
 }
 void init(){
 	system("cls");
-	now_hold=-1,board.clear();
+	now_hold=-1,board.clear(),combo=0;
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-2);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
