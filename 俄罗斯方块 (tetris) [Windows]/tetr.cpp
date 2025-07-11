@@ -1,8 +1,12 @@
 #include "init.h"
 #include "game.h"
 int main(){
-	Init::init();
-	Game::game();
-	while(1);
+	Init::cur_hide();
+	Init::rgb_init();
+	system("chcp 65001");
+	while(1){
+		Init::init();
+		Game::game();
+	}
 	return 0;
 }

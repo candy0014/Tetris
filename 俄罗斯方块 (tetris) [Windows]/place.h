@@ -8,9 +8,12 @@
 
 namespace Place{
 
-bool play(map &mp,Block::block B,int flag_h=0){
+int play(map &mp,Block::block B,int flag_h=0){
 	int x=-2,y=(mapWidth-1)/2,type=0;
-	if(!B.check(x,y,type,mp)) exit(0);
+	if(!B.check(x,y,type,mp)){
+		Sleep(1000);
+		return 2;
+	}
 	B.put(x,y,type,mp);
 	double tim=timer.get();
 	int vis[128];
@@ -18,7 +21,7 @@ bool play(map &mp,Block::block B,int flag_h=0){
 	for(auto ii:KEY){
 		int i=(int)ii;
 		vis[i]=0,t[i]=timer.get();
-		if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F"||custom[i]=="HD"){
+		if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F"||custom[i]=="HD"||custom[i]=="RE"){
 			vis[i]=-Interactive::keydown(i);
 		}
 	}
@@ -51,6 +54,7 @@ bool play(map &mp,Block::block B,int flag_h=0){
 				flag_hd=1;
 				break;
 			}
+			if(tmp&&custom[i]=="RE") return 2;
 			if(vis[i]&&!tmp){
 				vis[i]=0;
 				continue;

@@ -50,6 +50,7 @@ struct Temp{
 		custom[VK_DOWN]="SD";
 		custom[VK_SPACE]="HD";
 		custom['C']="H";
+		custom['R']="RE";
 		// custom[VK_SHIFT]="H";
 		for(auto x:custom) KEY.emplace_back(x.first);
 	}

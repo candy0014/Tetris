@@ -13,7 +13,9 @@ void game(){
 			Block::get_block(Init::bl[i+j]).put_next(j,0);
 			Block::get_block(Init::bl[i+j+1]).put_next(j);
 		}
-		if(Place::play(board,Block::get_block(Init::bl[i]),flag|(!Open_hold))){
+		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!Open_hold));
+		if(res==2) return;
+		else if(res==1){
 			if(Init::now_hold!=-1) std::swap(Init::now_hold,Init::bl[i]),i--,flag=1;
 			else Init::now_hold=Init::bl[i],flag=1;
 		}

@@ -27,11 +27,10 @@ void rgb_init(){
 	SetConsoleMode(hOut, dwOutMode);
 }
 void init(){
-	cur_hide();
-	rgb_init();
-	system("chcp 65001"),system("cls");
-	now_hold=-1;
+	system("cls");
+	now_hold=-1,board.clear();
 	if(FSBorYPA) Interactive::setcol(-1);
+	else Interactive::setcol(-2);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
 	for(int i=0;i<Bag;i++) shuffle(bl+i*7,bl+(i+1)*7,rd);
 	for(int i=0;i<=mapHeightP;i++){

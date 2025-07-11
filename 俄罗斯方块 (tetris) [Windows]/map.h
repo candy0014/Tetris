@@ -15,6 +15,9 @@ struct map {
 			assert(0 <= pos && pos < mapWidth);
 			return rows[pos];
 		}
+		void clear(){
+			memset(rows, 0xff, sizeof(rows));
+		}
 	};
 
 	line mapP[mapHeightP], mapN[mapHeightN];
@@ -26,6 +29,10 @@ struct map {
 			return mapP[pos];
 		}
 		return mapN[-pos - 1];
+	}
+	void clear(){
+		for(int i=0;i<mapHeightP;i++) mapP[i].clear();
+		for(int i=0;i<mapHeightN;i++) mapN[i].clear();
 	}
 };
 
