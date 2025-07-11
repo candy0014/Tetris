@@ -254,6 +254,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		Interactive::go(mapHeightP+2,0);
 	}
 	int now=mapHeightP,flag=0;
+	setvbuf(stdout,NULL,_IOFBF,4096);
 	for(int i=mapHeightP-1;i>=-mapHeightN;i--){
 		now--;
 		while(now+mapHeightN>=1&&tag[now+mapHeightN]) now--,flag=1;
@@ -265,10 +266,12 @@ int play(map &mp,Block::block B,int flag_h=0){
 			if(!Invisible){
 				if(mp[now][j]==-1) std::cout<<"  ";
 				else std::cout<<"█ ";
+				fflush(stdout);
 			}
 		}
 		mp[i]=mp[now];
 	}
+	setvbuf(stdout,NULL,_IONBF,0);
 	Interactive::go(mapHeightP+2,0);
 	return 0;
 }
