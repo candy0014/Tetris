@@ -219,6 +219,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 	if(Invisible){
 		B.put(x,y,type,mp,0);
 	}
+	int spin_flag=1,dir[4][2]={1,0,0,1,-1,0,0,-1};
+	for(int i=0;i<4;i++) if(B.check(x+dir[i][0],y+dir[i][1],type,mp)) spin_flag=0;
 	for(int i=0;i<4;i++) mp[x+B.shape[type][i][0]][y+B.shape[type][i][1]]=B.ty;
 	int tag[105],cnt_clear=0;
 	for(int i=-mapHeightN;i<mapHeightP;i++){
@@ -230,16 +232,22 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	if(!FSBorYPA){
 		Interactive::go(7,-7,1);
+		std::cout<<"      ";
+		if(spin_flag){
+			Interactive::go(7,-7,1),Interactive::setcol(B.ty);
+			std::cout<<"IJLOSTZ"[B.ty]<<"-Spin";
+		}
+		Interactive::go(8,-7,1);
 		Interactive::rgb_set(255,255,255);
 		std::cout<<"　　　　　　";
-		Interactive::go(7,-7,1);
+		Interactive::go(8,-7,1);
 		if(cnt_clear==1) std::cout<<"ＳＩＮＧＬＥ";
 		if(cnt_clear==2) std::cout<<"ＤＯＵＢＬＥ";
 		if(cnt_clear==3) std::cout<<"ＴＲＩＰＬＥ";
 		if(cnt_clear==4) std::cout<<"ＱＵＡＤ　　";
-		Interactive::go(9,-8,1);
+		Interactive::go(10,-8,1);
 		std::cout<<"  　　　　　";
-		Interactive::go(9,-8,1);
+		Interactive::go(10,-8,1);
 		if(cnt_clear){
 			Init::combo++;
 			if(Init::combo>=2){
