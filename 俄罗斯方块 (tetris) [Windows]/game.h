@@ -9,10 +9,12 @@ namespace Game{
 void game(){
 	int flag=0;
 	for(int i=0;i<Bag*7;i++){
+		setvbuf(stdout,NULL,_IOFBF,4096);
 		for(int j=0;j<Next_num;j++){
 			Block::get_block(Init::bl[i+j]).put_next(j,0);
 			Block::get_block(Init::bl[i+j+1]).put_next(j);
 		}
+		setvbuf(stdout,NULL,_IONBF,0);
 		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!Open_hold));
 		if(res==2) return;
 		else if(res==1){

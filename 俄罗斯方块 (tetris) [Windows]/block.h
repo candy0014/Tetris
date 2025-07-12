@@ -83,11 +83,11 @@ struct block{
 		Interactive::setcol(ty);
 		for(int i=0;i<4;i++){
 			Interactive::go_next(x,shape[0][i][0],shape[0][i][1],ty);
-			if(op) std::cout<<"█ ";
-			else std::cout<<"  ";
+			if(op) std::cout<<"█ ",fflush(stdout);
+			else std::cout<<"  ",fflush(stdout);
 		}
 	}
-	bool checks(int &x,int &y,int last_type,int type,map mp){
+	bool checks(int &x,int &y,int last_type,int type,map mp,int &rotate_op){
 		int op=8;
 		if(last_type==0&&type==1) op=0;
 		if(last_type==1&&type==0) op=1;
@@ -102,7 +102,7 @@ struct block{
 		if(last_type==1&&type==3) op=10;
 		if(last_type==3&&type==1) op=11;
 		for(int i=0;i<6;i++) if(check(x-chk[op][i][1],y+chk[op][i][0],type,mp)){
-			x-=chk[op][i][1],y+=chk[op][i][0];
+			x-=chk[op][i][1],y+=chk[op][i][0],rotate_op=i;
 			return 1;
 		}
 		return 0;
