@@ -19,9 +19,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 					std::cout<<"█ ";
 				}
 			}
-			Sleep(500);
+			Sleep(1000);
 		} 
-		Sleep(1000);
+		Sleep(300);
 		return 2;
 	}
 	B.put(x,y,type,mp);
@@ -235,11 +235,11 @@ int play(map &mp,Block::block B,int flag_h=0){
 	int b2b_flag=0,spin_flag=0;
 	setvbuf(stdout,NULL,_IOFBF,4096);
 	if(!FSBorYPA){
-		Interactive::go(7,-7,2);
-		std::cout<<"　         ",fflush(stdout);
+		Interactive::go(7,-7,1);
+		std::cout<<"　          ",fflush(stdout);
 		if(B.ty!=5){
 			if(nomove_flag&&last_op){
-				Interactive::go(7,-7,2),Interactive::setcol(B.ty);
+				Interactive::go(7,-7,1),Interactive::setcol(B.ty);
 				if(B.ty==0) std::cout<<"Ｉ";
 				if(B.ty==1) std::cout<<"Ｊ";
 				if(B.ty==2) std::cout<<"Ｌ";
@@ -258,11 +258,11 @@ int play(map &mp,Block::block B,int flag_h=0){
 				if(i==type||i==(type+1)%4) cnt2++;
 			}
 			if(cnt1>=3&&(cnt2==2||last_op==6)){
-				Interactive::go(7,-7,2),Interactive::setcol(B.ty),spin_flag=1;
+				Interactive::go(7,-7,1),Interactive::setcol(B.ty),spin_flag=1;
 				std::cout<<"Ｔ-Spin";
 			}
 			else if(last_op&&(nomove_flag||cnt1==3)){
-				Interactive::go(7,-7,2),Interactive::setcol(B.ty),spin_flag=1;
+				Interactive::go(7,-7,1),Interactive::setcol(B.ty),spin_flag=1;
 				std::cout<<"Ｔ-Spin Mini";
 			}
 			fflush(stdout);

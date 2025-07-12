@@ -53,13 +53,15 @@ struct block{
 		return 1;
 	}
 	void put_block(int x,int y,int type,int op=1){
+		setvbuf(stdout,NULL,_IOFBF,4096);
 		if(op==1) Interactive::setcol(ty);
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go(x+shape[type][i][0],y+shape[type][i][1]);
-			if(op) std::cout<<"█ ";
-			else std::cout<<"  ";
+			if(op) std::cout<<"█ ",fflush(stdout);
+			else std::cout<<"  ",fflush(stdout);
 		}
+		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::go(mapHeightP+2,0);
 	}
 	void put(int x,int y,int type,map mp,int op=1){
@@ -69,13 +71,15 @@ struct block{
 		put_block(x,y,type,op);
 	}
 	void put_hold(int op=1){
+		setvbuf(stdout,NULL,_IOFBF,4096);
 		if(op==1) Interactive::setcol(ty);
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go_hold(shape[0][i][0],shape[0][i][1],ty);
-			if(op) std::cout<<"█ ";
-			else std::cout<<"  ";
+			if(op) std::cout<<"█ ",fflush(stdout);
+			else std::cout<<"  ",fflush(stdout);
 		}
+		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::gotoxy(1,1);
 	}
 	void put_next(int x,int op=1){

@@ -22,7 +22,7 @@ constexpr int Invisible=0; //启用隐形块
 constexpr int Ghost=1; //阴影块（方块落点）
 constexpr int FSBorYPA=0; //开起来试试？（防教练用
 
-constexpr int Bag=1000000;
+constexpr int Bag=100000;
 constexpr int Margin=30;
 constexpr int mapHeightP = mapHeight;
 constexpr int mapHeightN = 8;
