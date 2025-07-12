@@ -76,6 +76,7 @@ struct block{
 			if(op) std::cout<<"█ ";
 			else std::cout<<"  ";
 		}
+		Interactive::gotoxy(1,1);
 	}
 	void put_next(int x,int op=1){
 		if(Next_num==0) return;
