@@ -58,7 +58,11 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go(x+shape[type][i][0],y+shape[type][i][1]);
-			if(op) std::cout<<"█ ",fflush(stdout);
+			if(op){
+				if(version<=10) std::cout<<"█ ";
+				else std::cout<<"██";
+				fflush(stdout);
+			}
 			else std::cout<<"  ",fflush(stdout);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
@@ -76,7 +80,11 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go_hold(shape[0][i][0],shape[0][i][1],ty);
-			if(op) std::cout<<"█ ",fflush(stdout);
+			if(op){
+				if(version<=10) std::cout<<"█ ";
+				else std::cout<<"██";
+				fflush(stdout);
+			}
 			else std::cout<<"  ",fflush(stdout);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
@@ -87,7 +95,11 @@ struct block{
 		Interactive::setcol(ty);
 		for(int i=0;i<4;i++){
 			Interactive::go_next(x,shape[0][i][0],shape[0][i][1],ty);
-			if(op) std::cout<<"█ ",fflush(stdout);
+			if(op){
+				if(version<=10) std::cout<<"█ ";
+				else std::cout<<"██";
+				fflush(stdout);
+			}
 			else std::cout<<"  ",fflush(stdout);
 		}
 	}

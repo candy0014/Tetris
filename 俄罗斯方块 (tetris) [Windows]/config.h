@@ -7,6 +7,7 @@
 #include <windows.h>
 
 namespace Config{
+constexpr int version=11; //Windows版本
 
 constexpr double SPE=0.6; //默认下落速度，单位 秒/行
 constexpr double SDF=0; //软降重力倍率，设为 0 即为正无穷
@@ -43,6 +44,7 @@ struct Temp{
 			"SD": 软降
 			"HD": 硬降
 			"H": Hold
+			"RE": 重开
 		*/
 		custom[VK_LEFT]="L";
 		custom[VK_RIGHT]="R";

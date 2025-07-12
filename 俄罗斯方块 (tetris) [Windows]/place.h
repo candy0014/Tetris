@@ -16,7 +16,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=-1){
 					Interactive::go(i,j);
 					Interactive::setcol(mp[i][j]);
-					std::cout<<"█ ";
+					if(version<=10) std::cout<<"█ ";
+					else std::cout<<"██";
 				}
 			}
 			Sleep(1000);
@@ -327,7 +328,10 @@ int play(map &mp,Block::block B,int flag_h=0){
 			Interactive::setcol(mp[now][j]);
 			if(!Invisible){
 				if(mp[now][j]==-1) std::cout<<"  ";
-				else std::cout<<"█ ";
+				else{
+					if(version<=10) std::cout<<"█ ";
+					else std::cout<<"██";
+				}
 				fflush(stdout);
 			}
 		}
