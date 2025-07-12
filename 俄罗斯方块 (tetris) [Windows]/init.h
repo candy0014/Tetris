@@ -14,6 +14,7 @@ short bl[Bag*7];
 std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 short now_hold;
 int combo,b2b;
+long long score;
 void cur_hide(){CONSOLE_CURSOR_INFO cur={1,0};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE),&cur);}
 void cur_show(){CONSOLE_CURSOR_INFO cur={1,1};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE),&cur);}
 void rgb_init(){
@@ -27,9 +28,19 @@ void rgb_init(){
 	SetConsoleMode(hIn, dwInMode);
 	SetConsoleMode(hOut, dwOutMode);
 }
+void print_score(){
+	if(FSBorYPA) Interactive::setcol(-1);
+	else Interactive::setcol(-2);
+	int dig=(score==0);
+	long long tmp=score;
+	while(tmp) dig++,tmp/=10;
+	Interactive::gotoxy(mapHeightP+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
+	std::cout<<score;fflush(stdout);
+}
 void init(){
 	system("cls");
 	now_hold=-1,board.clear(),combo=b2b=0;
+	// score=0;
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-2);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
@@ -69,6 +80,7 @@ void init(){
 		}
 	}
 	for(int i=0;i<Next_num;i++) Block::get_block(bl[i]).put_next(i);
+	print_score();
 	setvbuf(stdout,NULL,_IONBF,0);
 }
 }

@@ -62,7 +62,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 			}
 			if(!vis[i]&&!tmp) continue;
 			if(tmp&&custom[i]=="HD"){
-				while(B.check(x+1,y,type,mp)) x++,last_op=0;
+				while(B.check(x+1,y,type,mp)) x++,last_op=0,Init::score+=2;
 				flag_hd=1;
 				break;
 			}
@@ -119,7 +119,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						}
 					}
 				}
-				if(custom[i]=="SD"&&B.check(x+1,y,type,mp)) x++,tim=timer.get(),last_op=0;
+				if(custom[i]=="SD"&&B.check(x+1,y,type,mp)) x++,tim=timer.get(),last_op=0,Init::score++;
 				if(custom[i]=="L"){
 					double ma_tim=0;int mak=0;
 					for(auto d:kb_move) if(vis[d]){
@@ -151,12 +151,12 @@ int play(map &mp,Block::block B,int flag_h=0){
 				if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F") continue;
 				if(custom[i]=="SD"){
 					if(SDF==0){
-						while(B.check(x+1,y,type,mp)) x++;
+						while(B.check(x+1,y,type,mp)) x++,Init::score++;
 						tim=timer.get();
 					}
 					else if(timer.get()-t[i]>SPE/SDF){
 						t[i]=timer.get();
-						if(B.check(x+1,y,type,mp)) x++,tim=timer.get();
+						if(B.check(x+1,y,type,mp)) x++,tim=timer.get(),Init::score++;
 					}
 				}
 				if(custom[i]=="L"){
@@ -233,90 +233,99 @@ int play(map &mp,Block::block B,int flag_h=0){
 		for(int j=1;j<mapWidth&&pc_flag;j++) if(std::min(0,mp[i][j])!=std::min(0,mp[i][0])) pc_flag=0;
 		cnt_clear+=tag[i+mapHeightN];
 	}
-	int b2b_flag=0,spin_flag=0;
+	int b2b_flag=0,spin_flag=0,mini_flag=0;
 	setvbuf(stdout,NULL,_IOFBF,4096);
-	if(!FSBorYPA){
-		Interactive::go(7,-7,1);
-		std::cout<<"　          ",fflush(stdout);
-		if(B.ty!=5){
-			if(nomove_flag&&last_op){
-				Interactive::go(7,-7,1),Interactive::setcol(B.ty);
-				if(B.ty==0) std::cout<<"Ｉ";
-				if(B.ty==1) std::cout<<"Ｊ";
-				if(B.ty==2) std::cout<<"Ｌ";
-				if(B.ty==3) std::cout<<"Ｏ";
-				if(B.ty==4) std::cout<<"Ｓ";
-				if(B.ty==6) std::cout<<"Ｚ";
-				std::cout<<"-Spin",spin_flag=1;
-				fflush(stdout);
-			}
-		}
-		else{
-			int _dir[4][2]={-1,-1,-1,1,1,1,1,-1};
-			int cnt1=0,cnt2=0;
-			for(int i=0;i<4;i++) if(x+_dir[i][0]>=mapHeightP||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]][y+_dir[i][1]]!=-1){
-				cnt1++;
-				if(i==type||i==(type+1)%4) cnt2++;
-			}
-			if(cnt1>=3&&(cnt2==2||last_op==6)){
-				Interactive::go(7,-7,1),Interactive::setcol(B.ty),spin_flag=1;
-				std::cout<<"Ｔ-Spin";
-			}
-			else if(last_op&&(nomove_flag||cnt1==3)){
-				Interactive::go(7,-7,1),Interactive::setcol(B.ty),spin_flag=1;
-				std::cout<<"Ｔ-Spin Mini";
-			}
+	Interactive::go(7,-7,1);
+	std::cout<<"　          ",fflush(stdout);
+	if(B.ty!=5){
+		if(nomove_flag&&last_op){
+			Interactive::go(7,-7,1);
+			if(!FSBorYPA) Interactive::setcol(B.ty);
+			else Interactive::setcol(-1);
+			if(B.ty==0) std::cout<<"Ｉ";
+			if(B.ty==1) std::cout<<"Ｊ";
+			if(B.ty==2) std::cout<<"Ｌ";
+			if(B.ty==3) std::cout<<"Ｏ";
+			if(B.ty==4) std::cout<<"Ｓ";
+			if(B.ty==6) std::cout<<"Ｚ";
+			std::cout<<"-Spin",spin_flag=1;
 			fflush(stdout);
-		}	
-		Interactive::go(8,-7,1);
-		Interactive::rgb_set(255,255,255);
-		std::cout<<"　　　　　　",fflush(stdout);
-		Interactive::go(8,-7,1);
-		if(cnt_clear==0) b2b_flag=2;
-		if(cnt_clear==1) std::cout<<"ＳＩＮＧＬＥ";
-		if(cnt_clear==2) std::cout<<"ＤＯＵＢＬＥ";
-		if(cnt_clear==3) std::cout<<"ＴＲＩＰＬＥ";
-		if(cnt_clear==4) std::cout<<"ＱＵＡＤ　　",b2b_flag=1;
-		fflush(stdout);
-		b2b_flag|=spin_flag|pc_flag;
-		Interactive::go(9,-7,2);
-		std::cout<<"           ",fflush(stdout);
-		if(!b2b_flag) Init::b2b=0;
-		if(b2b_flag==1) Init::b2b++;
-		if(Init::b2b>=2){
-			Interactive::go(9,-7,2);
-			Interactive::rgb_set(255,255,255);
-			std::cout<<"B2B×"<<Init::b2b-1;
 		}
-		fflush(stdout);
-		Interactive::go(11,-7,1);
-		std::cout<<"  　　　　　",fflush(stdout);
-		Interactive::go(11,-7,1);
-		if(cnt_clear){
-			Init::combo++;
-			if(Init::combo>=2){
-				Interactive::rgb_set(255,255,255);
-				std::cout<<Init::combo-1;
-				if(Init::combo-1<10) std::cout<<" ";
-				Interactive::rgb_set(255,255,255);
-				std::cout<<"ＣＯＭＢＯ";
-				fflush(stdout);
-			}
-		}
-		else Init::combo=0;
-		Interactive::go(13,-5,0);
-		std::cout<<"　　　",fflush(stdout);
-		Interactive::go(14,-6,0);
-		std::cout<<"　　　　　",fflush(stdout);
-		if(pc_flag){
-			Interactive::rgb_set(238,219,47);
-			Interactive::go(13,-5,0);
-			std::cout<<"ＡＬＬ",fflush(stdout);
-			Interactive::go(14,-6,0);
-			std::cout<<"ＣＬＥＡＲ",fflush(stdout);
-		}
-		Interactive::go(mapHeightP+2,0);
 	}
+	else{
+		int _dir[4][2]={-1,-1,-1,1,1,1,1,-1};
+		int cnt1=0,cnt2=0;
+		for(int i=0;i<4;i++) if(x+_dir[i][0]>=mapHeightP||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]][y+_dir[i][1]]!=-1){
+			cnt1++;
+			if(i==type||i==(type+1)%4) cnt2++;
+		}
+		if(cnt1>=3&&(cnt2==2||last_op==6)){
+			Interactive::go(7,-7,1);
+			if(!FSBorYPA) Interactive::setcol(B.ty);
+			else Interactive::setcol(-1);
+			spin_flag=1;
+			std::cout<<"Ｔ-Spin";
+		}
+		else if(last_op&&(nomove_flag||cnt1==3)){
+			Interactive::go(7,-7,1);
+			if(!FSBorYPA) Interactive::setcol(B.ty);
+			else Interactive::setcol(-1);
+			spin_flag=1,mini_flag=1;
+			std::cout<<"Ｔ-Spin Mini";
+		}
+		fflush(stdout);
+	}	
+	Interactive::go(8,-7,1);
+	if(!FSBorYPA) Interactive::setcol(-3);
+	else Interactive::setcol(-1);
+	std::cout<<"　　　　　　",fflush(stdout);
+	Interactive::go(8,-7,1);
+	if(cnt_clear==0) b2b_flag=2;
+	if(cnt_clear==1) std::cout<<"ＳＩＮＧＬＥ";
+	if(cnt_clear==2) std::cout<<"ＤＯＵＢＬＥ";
+	if(cnt_clear==3) std::cout<<"ＴＲＩＰＬＥ";
+	if(cnt_clear==4) std::cout<<"ＱＵＡＤ　　",b2b_flag=1;
+	fflush(stdout);
+	b2b_flag|=spin_flag|pc_flag;
+	Interactive::go(9,-7,2);
+	std::cout<<"           ",fflush(stdout);
+	if(!b2b_flag) Init::b2b=0;
+	if(b2b_flag==1) Init::b2b++;
+	if(Init::b2b>=2){
+		Interactive::go(9,-7,2);
+		if(!FSBorYPA) Interactive::setcol(-3);
+		else Interactive::setcol(-1);
+		std::cout<<"B2B×"<<Init::b2b-1;
+	}
+	fflush(stdout);
+	Interactive::go(11,-7,1);
+	std::cout<<"  　　　　　",fflush(stdout);
+	Interactive::go(11,-7,1);
+	if(cnt_clear){
+		Init::combo++;
+		if(Init::combo>=2){
+			if(!FSBorYPA) Interactive::setcol(-3);
+			else Interactive::setcol(-1);
+			std::cout<<Init::combo-1;
+			if(Init::combo-1<10) std::cout<<" ";
+			std::cout<<"ＣＯＭＢＯ";
+			fflush(stdout);
+		}
+	}
+	else Init::combo=0;
+	Interactive::go(13,-5,0);
+	std::cout<<"　　　",fflush(stdout);
+	Interactive::go(14,-6,0);
+	std::cout<<"　　　　　",fflush(stdout);
+	if(pc_flag){
+		if(!FSBorYPA) Interactive::rgb_set(238,219,47);
+		else Interactive::setcol(-1);
+		Interactive::go(13,-5,0);
+		std::cout<<"ＡＬＬ",fflush(stdout);
+		Interactive::go(14,-6,0);
+		std::cout<<"ＣＬＥＡＲ",fflush(stdout);
+	}
+	Interactive::go(mapHeightP+2,0);
 	int now=mapHeightP,flag=0;
 	for(int i=mapHeightP-1;i>=-mapHeightN;i--){
 		now--;
@@ -337,6 +346,20 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		mp[i]=mp[now];
 	}
+	int dscore=0;
+	if(cnt_clear==1) dscore+=100;
+	if(cnt_clear==2) dscore+=300;
+	if(cnt_clear==3) dscore+=500;
+	if(cnt_clear==4) dscore+=800;
+	if(B.ty==5&&spin_flag){
+		if(!mini_flag) dscore+=(cnt_clear+1)*400;
+		else dscore+=(100<<cnt_clear);
+	}
+	if(pc_flag) dscore+=3500;
+	if(b2b_flag==1&&Init::b2b>=2) dscore=dscore*1.5;
+	if(Init::combo) dscore+=50*(Init::combo-1);
+	Init::score+=dscore;
+	Init::print_score();
 	setvbuf(stdout,NULL,_IONBF,0);
 	Interactive::go(mapHeightP+2,0);
 	return 0;

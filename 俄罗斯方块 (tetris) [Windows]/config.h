@@ -7,7 +7,7 @@
 #include <windows.h>
 
 namespace Config{
-constexpr int version=11; //Windows版本
+constexpr int version=10; //Windows版本
 
 constexpr double SPE=0.6; //默认下落速度，单位 秒/行
 constexpr double SDF=0; //软降重力倍率，设为 0 即为正无穷

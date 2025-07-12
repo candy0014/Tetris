@@ -33,6 +33,9 @@ void rgb_set(int wr,int wg,int wb,int br=12,int bg=12,int bb=12){
 	printf("\033[38;2;%d;%d;%dm\033[48;2;%d;%d;%dm",wr,wg,wb,br,bg,bb);
 }
 void setcol(int type){
+	if(type==-3){
+		rgb_set(255,255,255);
+	}
 	if(type==-2){
 		rgb_set(204,204,204);
 		return;
