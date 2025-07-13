@@ -50,30 +50,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
 			if(!B.check(x+1,y,type,mp)) x--;
-			for(int i=-mapHeightN;i<mapHeightP-1;i++){
-				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+1][j]){
-					Interactive::go(i,j);
-					Interactive::setcol(mp[i+1][j]);
-					if(mp[i+1][j]==-1) std::cout<<" ";
-					else{
-						if(version<=10) std::cout<<"█ ";
-						else std::cout<<"██";
-					}
-					fflush(stdout);
-				}
-				mp[i]=mp[i+1];
-			}
 			if(rnd()%1000000<1000000*cheese_messiness) Init::last_hole=rnd()%mapWidth;
-			for(int j=0;j<mapWidth;j++){
-				mp[mapHeightP-1][j]=(j==Init::last_hole)?-1:8;
-				Interactive::go(mapHeightP-1,j),Interactive::setcol(mp[mapHeightP-1][j]);
-				if(mp[mapHeightP-1][j]==-1) std::cout<<" ";
-				else{
-					if(version<=10) std::cout<<"█ ";
-					else std::cout<<"██";
-				}
-				fflush(stdout);
-			}
+			Init::add_garbage(Init::last_hole,1,mp);
 			B.put(x,y,type,mp);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim=timer.get();
@@ -258,6 +236,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	for(int i=0;i<4;i++) if(B.check(x+dir[i][0],y+dir[i][1],type,mp)) nomove_flag=0;
 	for(int i=0;i<4;i++) mp[x+B.shape[type][i][0]][y+B.shape[type][i][1]]=B.ty;
 	int tag[105],cnt_clear=0,pc_flag=1;
+	int cnt_garbage=0;
 	for(int i=-mapHeightN;i<mapHeightP;i++){
 		tag[i+mapHeightN]=1;
 		for(int j=0;j<mapWidth;j++){
@@ -265,6 +244,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		for(int j=1;j<mapWidth&&pc_flag;j++) if(std::min(0,mp[i][j])!=std::min(0,mp[i][0])) pc_flag=0;
 		cnt_clear+=tag[i+mapHeightN];
+		if(tag[i+mapHeightN]&&i>=mapHeightP-layer_height) cnt_garbage++;
 	}
 	int b2b_flag=0,spin_flag=0,mini_flag=0;
 	setvbuf(stdout,NULL,_IOFBF,4096);
@@ -385,6 +365,12 @@ int play(map &mp,Block::block B,int flag_h=0){
 			}
 		}
 		mp[i]=mp[now];
+	}
+	if(Garbage==3){
+		while(cnt_garbage--){
+			if(rnd()%1000000<1000000*cheese_messiness) Init::last_hole=rnd()%mapWidth;
+			Init::add_garbage(Init::last_hole,1,mp);
+		}
 	}
 	int dscore=0;
 	if(cnt_clear==1) dscore+=100;

@@ -39,6 +39,33 @@ void print_score(){
 	std::cout<<score;fflush(stdout);
 }
 std::mt19937 rnd(time(0));
+void add_garbage(int pos,int height,map &mp){
+	for(int i=-mapHeightN;i<mapHeightP-height;i++){
+		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+height][j]){
+			Interactive::go(i,j);
+			Interactive::setcol(mp[i+height][j]);
+			if(mp[i+height][j]==-1) std::cout<<" ";
+			else{
+				if(version<=10) std::cout<<"█ ";
+				else std::cout<<"██";
+			}
+			fflush(stdout);
+		}
+		mp[i]=mp[i+1];
+	}
+	for(int i=mapHeightP-height;i<mapHeightP;i++){
+		for(int j=0;j<mapWidth;j++){
+			mp[i][j]=(j==pos)?-1:8;
+			Interactive::go(i,j),Interactive::setcol(mp[i][j]);
+			if(mp[i][j]==-1) std::cout<<" ";
+			else{
+				if(version<=10) std::cout<<"█ ";
+				else std::cout<<"██";
+			}
+			fflush(stdout);
+		}
+	}
+}
 double last_tim;
 int last_hole;
 void init(){
@@ -84,9 +111,16 @@ void init(){
 		}
 	}
 	for(int i=0;i<Next_num;i++) Block::get_block(bl[i]).put_next(i);
+	last_hole=rnd()%mapWidth;
+	if(Garbage==3){
+		for(int i=1;i<=layer_height;i++){
+			if(rnd()%1000000<1000000*cheese_messiness) last_hole=rnd()%mapWidth;
+			add_garbage(last_hole,1,board);
+		}
+	}
 	print_score();
 	setvbuf(stdout,NULL,_IONBF,0);
-	last_tim=timer.get(),last_hole=rnd()%mapWidth;
+	last_tim=timer.get();
 }
 }
 
