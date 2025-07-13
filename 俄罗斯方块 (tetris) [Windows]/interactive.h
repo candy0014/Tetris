@@ -48,13 +48,24 @@ void setcol(int type){
 		rgb_set(0,0,0);
 		return;
 	}
-	if(type==0) rgb_set(54,235,168);
-	if(type==1) rgb_set(95,78,179);
-	if(type==2) rgb_set(197,117,68);
-	if(type==3) rgb_set(193,168,65);
-	if(type==4) rgb_set(139,185,61);
-	if(type==5) rgb_set(176,78,166);
-	if(type==6) rgb_set(202,70,77);
+	if(RotationSystem=="SRS"){
+		if(type==0) rgb_set(54,235,168);
+		if(type==1) rgb_set(95,78,179);
+		if(type==2) rgb_set(197,117,68);
+		if(type==3) rgb_set(193,168,65);
+		if(type==4) rgb_set(139,185,61);
+		if(type==5) rgb_set(176,78,166);
+		if(type==6) rgb_set(202,70,77);
+	}
+	if(RotationSystem=="ARS"){
+		if(type==0) rgb_set(202,70,77);
+		if(type==1) rgb_set(95,78,179);
+		if(type==2) rgb_set(197,117,68);
+		if(type==3) rgb_set(193,168,65);
+		if(type==4) rgb_set(176,78,166);
+		if(type==5) rgb_set(54,235,168);
+		if(type==6) rgb_set(139,185,61);
+	}
 }
 
 }

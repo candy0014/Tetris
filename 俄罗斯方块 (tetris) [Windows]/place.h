@@ -253,11 +253,17 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 	}
 	else{
+		int cnt1=0,cnt2=0,dx=0;
 		int _dir[4][2]={-1,-1,-1,1,1,1,1,-1};
-		int cnt1=0,cnt2=0;
-		for(int i=0;i<4;i++) if(x+_dir[i][0]>=mapHeightP||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]][y+_dir[i][1]]!=-1){
+		if(RotationSystem=="ARS") dx=1;
+		for(int i=0;i<4;i++) if(x+_dir[i][0]+dx>=mapHeightP||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]+dx][y+_dir[i][1]]!=-1){
 			cnt1++;
-			if(i==type||i==(type+1)%4) cnt2++;
+			if(RotationSystem=="SRS"){
+				if(i==type||i==(type+1)%4) cnt2++;
+			}
+			if(RotationSystem=="ARS"){
+				if(i==(type+2)%4||i==(type+3)%4) cnt2++;
+			}
 		}
 		if(cnt1>=3&&(cnt2==2||last_op==6)){
 			Interactive::go(7,-7,1);
