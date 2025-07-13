@@ -21,10 +21,11 @@ constexpr int Open_hold=1; //是否允许 Hold
 constexpr int EPLD_lim=15; //移动重置重置次数限制
 constexpr int Invisible=0; //启用隐形块
 constexpr int Ghost=1; //阴影块（方块落点）
-constexpr int Garbage=0; //0:无垃圾行；3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
+constexpr int Garbage=0; //0:无垃圾行；2:unclear（打出的攻击立即以垃圾行返回）；3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
 constexpr int layer_height=6; //固定垃圾行层数
 constexpr double time_interval=4; //垃圾行增加速率
 constexpr double cheese_messiness=1; //垃圾行混乱程度（0~1)
+constexpr double garbage_multiple=0.5; //unclear 攻击倍率
 constexpr int FSBorYPA=0; //开起来试试？（防教练用
 
 constexpr int Bag=100000;

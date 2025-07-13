@@ -54,7 +54,7 @@ void add_garbage(int pos,int height,map &mp){
 			}
 			fflush(stdout);
 		}
-		mp[i]=mp[i+1];
+		mp[i]=mp[i+height];
 	}
 	for(int i=mapHeightP-height;i<mapHeightP;i++){
 		for(int j=0;j<mapWidth;j++){
