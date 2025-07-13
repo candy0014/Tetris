@@ -355,14 +355,15 @@ int play(map &mp,Block::block B,int flag_h=0){
 		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[now][j]){
 			Interactive::go(i,j);
 			Interactive::setcol(mp[now][j]);
-			if(!Invisible){
-				if(mp[now][j]==-1) std::cout<<"  ";
-				else{
+			if(mp[now][j]==-1) std::cout<<"  ";
+			else{
+				if(!Invisible||mp[now][j]==7){
 					if(version<=10) std::cout<<"█ ";
 					else std::cout<<"██";
 				}
-				fflush(stdout);
+				else std::cout<<"  ";
 			}
+			fflush(stdout);
 		}
 		mp[i]=mp[now];
 	}
