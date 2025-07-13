@@ -8,6 +8,7 @@
 
 namespace Place{
 
+std::mt19937 rnd(time(0));
 int play(map &mp,Block::block B,int flag_h=0){
 	int x=-2,y=(mapWidth-1)/2,type=0;
 	if(!B.check(x,y,type,mp)){
@@ -45,6 +46,38 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
+		if(time_interval!=0&&timer.get()-Init::last_tim>time_interval){
+			setvbuf(stdout,NULL,_IOFBF,4096);
+			B.put(x,y,type,mp,0);
+			if(!B.check(x+1,y,type,mp)) x--;
+			for(int i=-mapHeightN;i<mapHeightP-1;i++){
+				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+1][j]){
+					Interactive::go(i,j);
+					Interactive::setcol(mp[i+1][j]);
+					if(mp[i+1][j]==-1) std::cout<<" ";
+					else{
+						if(version<=10) std::cout<<"█ ";
+						else std::cout<<"██";
+					}
+					fflush(stdout);
+				}
+				mp[i]=mp[i+1];
+			}
+			if(rnd()%1000000<1000000*cheese_messiness) Init::last_hole=rnd()%mapWidth;
+			for(int j=0;j<mapWidth;j++){
+				mp[mapHeightP-1][j]=(j==Init::last_hole)?-1:8;
+				Interactive::go(mapHeightP-1,j),Interactive::setcol(mp[mapHeightP-1][j]);
+				if(mp[mapHeightP-1][j]==-1) std::cout<<" ";
+				else{
+					if(version<=10) std::cout<<"█ ";
+					else std::cout<<"██";
+				}
+				fflush(stdout);
+			}
+			B.put(x,y,type,mp);
+			setvbuf(stdout,NULL,_IONBF,0);
+			Init::last_tim=timer.get();
+		}
 		if(timer.get()-tim>EPLD){
 			if(!B.check(x+1,y,type,mp)) break;
 		}
@@ -304,16 +337,17 @@ int play(map &mp,Block::block B,int flag_h=0){
 		std::cout<<"B2B×"<<Init::b2b-1;
 	}
 	fflush(stdout);
-	Interactive::go(11,-7,1);
-	std::cout<<"  　　　　　",fflush(stdout);
-	Interactive::go(11,-7,1);
+	Interactive::go(11,-9,0);
+	std::cout<<"       　　　　　",fflush(stdout);
 	if(cnt_clear){
 		Init::combo++;
 		if(Init::combo>=2){
+			int dig=0,tmp=Init::combo-1;
+			while(tmp) dig++,tmp/=10;
+			Interactive::go(11,-7-dig/2+!(dig&1),dig&1);
 			if(!FSBorYPA) Interactive::setcol(-3);
 			else Interactive::setcol(-1);
-			std::cout<<Init::combo-1;
-			if(Init::combo-1<10) std::cout<<" ";
+			std::cout<<Init::combo-1<<" ";
 			std::cout<<"ＣＯＭＢＯ";
 			fflush(stdout);
 		}

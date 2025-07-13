@@ -4,6 +4,7 @@
 #include "block.h"
 #include "map.h"
 #include "config.h"
+#include "timer.h"
 
 #include <random>
 #include <chrono>
@@ -37,6 +38,9 @@ void print_score(){
 	Interactive::gotoxy(mapHeightP+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
 	std::cout<<score;fflush(stdout);
 }
+std::mt19937 rnd(time(0));
+double last_tim;
+int last_hole;
 void init(){
 	system("cls");
 	now_hold=-1,board.clear(),combo=b2b=0;
@@ -82,6 +86,7 @@ void init(){
 	for(int i=0;i<Next_num;i++) Block::get_block(bl[i]).put_next(i);
 	print_score();
 	setvbuf(stdout,NULL,_IONBF,0);
+	last_tim=timer.get(),last_hole=rnd()%mapWidth;
 }
 }
 

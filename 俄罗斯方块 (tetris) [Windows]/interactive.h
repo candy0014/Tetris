@@ -66,6 +66,9 @@ void setcol(int type){
 		if(type==5) rgb_set(54,235,168);
 		if(type==6) rgb_set(139,185,61);
 	}
+	if(type==8){
+		rgb_set(78,78,78);
+	}
 }
 
 }
