@@ -22,8 +22,9 @@ constexpr int EPLD_lim=15; //移动重置重置次数限制
 constexpr int Invisible=0; //启用隐形块
 constexpr int Ghost=1; //阴影块（方块落点）
 constexpr int FSBorYPA=0; //开起来试试？（防教练用
-constexpr double time_interval=0; //垃圾行增加速率
-constexpr double cheese_messiness=0.3; //垃圾行混乱程度（0~1)
+constexpr int Garbage=0; //0:无垃圾行；4:cheese-timer（定时增加垃圾行）
+constexpr double time_interval=4; //垃圾行增加速率
+constexpr double cheese_messiness=1; //垃圾行混乱程度（0~1)
 
 constexpr int Bag=100000;
 constexpr int Margin=30;

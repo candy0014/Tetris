@@ -46,7 +46,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
-		if(time_interval!=0&&timer.get()-Init::last_tim>time_interval){
+		if(Garbage==4&&timer.get()-Init::last_tim>time_interval){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
 			if(!B.check(x+1,y,type,mp)) x--;
