@@ -379,8 +379,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 	if(cnt_clear==3) dscore+=500;
 	if(cnt_clear==4) dscore+=800;
 	if(B.ty==5&&spin_flag){
-		if(!mini_flag) dscore+=(cnt_clear+1)*400;
-		else dscore+=(100<<cnt_clear);
+		if(!mini_flag) dscore=(cnt_clear+1)*400;
+		else dscore=(100<<cnt_clear);
 	}
 	if(pc_flag) dscore+=3500;
 	if(b2b_flag==1&&Init::b2b>=2) dscore=dscore*1.5;
