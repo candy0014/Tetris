@@ -11,7 +11,7 @@ constexpr int version=10; //Windows版本
 std::string RotationSystem;
 constexpr double SPE=0.6; //默认下落速度，单位 秒/行
 constexpr double SDF=0; //软降重力倍率，设为 0 即为正无穷
-constexpr double DAS=0.112; //自动移动延迟，单位 秒
+constexpr double DAS=0.12; //自动移动延迟，单位 秒
 constexpr double ARR=0.025; //自动重复速率，单位 秒/列
 constexpr double EPLD=0.5; //锁定延迟（移动重置）
 constexpr int mapWidth=10; //地图宽度
@@ -24,7 +24,7 @@ constexpr int Ghost=1; //阴影块（方块落点）
 constexpr int Garbage=0; //0:无垃圾行；2:unclear（打出的攻击立即以垃圾行返回）；3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
 constexpr int layer_height=6; //固定垃圾行层数
 constexpr double time_interval=4; //垃圾行增加速率
-constexpr double cheese_messiness=1; //垃圾行混乱程度（0~1)
+constexpr double cheese_messiness=0.3; //垃圾行混乱程度（0~1)
 constexpr double garbage_multiple=0.5; //unclear 攻击倍率
 constexpr int FSBorYPA=0; //开起来试试？（防教练用
 

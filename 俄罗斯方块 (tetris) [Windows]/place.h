@@ -395,7 +395,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 				else if(Init::combo<=16) atk=2;
 				else atk=3;
 			}
-			atk+=pc_flag*5+b2b_charging,atk=(int)(atk*garbage_multiple+0.5);
+			atk+=pc_flag*5+b2b_charging,atk=(int)(atk*garbage_multiple);
 			Init::add_garbage(rnd()%mapWidth,atk,mp);
 		}
 	}

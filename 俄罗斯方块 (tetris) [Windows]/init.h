@@ -40,11 +40,12 @@ void print_score(){
 }
 std::mt19937 rnd(time(0));
 void add_garbage(int pos,int height,map &mp){
+	height=std::min(height,mapHeightP+mapHeightN);
 	for(int i=-mapHeightN;i<mapHeightP-height;i++){
 		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+height][j]){
 			Interactive::go(i,j);
 			Interactive::setcol(mp[i+height][j]);
-			if(mp[i+height][j]==-1) std::cout<<" ";
+			if(mp[i+height][j]==-1) std::cout<<"  ";
 			else{
 				if(!Invisible||mp[i+height][j]==7){
 					if(version<=10) std::cout<<"█ ";
@@ -60,7 +61,7 @@ void add_garbage(int pos,int height,map &mp){
 		for(int j=0;j<mapWidth;j++){
 			mp[i][j]=(j==pos)?-1:7;
 			Interactive::go(i,j),Interactive::setcol(mp[i][j]);
-			if(mp[i][j]==-1) std::cout<<" ";
+			if(mp[i][j]==-1) std::cout<<"  ";
 			else{
 				if(version<=10) std::cout<<"█ ";
 				else std::cout<<"██";
