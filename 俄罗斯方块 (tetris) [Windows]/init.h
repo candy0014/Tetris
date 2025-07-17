@@ -29,12 +29,16 @@ void rgb_init(){
 	SetConsoleMode(hIn, dwInMode);
 	SetConsoleMode(hOut, dwOutMode);
 }
+int get_dig(long long x){
+	if(x==0) return 1;
+	int cnt=0;
+	while(x) cnt++,x/=10;
+	return cnt;
+}
 void print_score(){
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-2);
-	int dig=(score==0);
-	long long tmp=score;
-	while(tmp) dig++,tmp/=10;
+	int dig=get_dig(score);
 	Interactive::gotoxy(mapHeightP+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
 	std::cout<<score;fflush(stdout);
 }
@@ -70,14 +74,16 @@ void add_garbage(int pos,int height,map &mp){
 		}
 	}
 }
-double last_tim;
+double last_tim,last_tim2,begin_tim;
 int last_hole;
+int cnt_block,cnt_atk;
 void init(){
 	system("cls");
 	now_hold=-1,board.clear(),combo=b2b=0;
+	cnt_block=cnt_atk=0;
 	// score=0;
 	if(FSBorYPA) Interactive::setcol(-1);
-	else Interactive::setcol(-2);
+	else Interactive::setcol(-3);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
 	for(int i=0;i<Bag;i++) shuffle(bl+i*7,bl+(i+1)*7,rd);
 	setvbuf(stdout,NULL,_IOFBF,4096);
@@ -124,7 +130,7 @@ void init(){
 	}
 	print_score();
 	setvbuf(stdout,NULL,_IONBF,0);
-	last_tim=timer.get();
+	last_tim=last_tim2=begin_tim=timer.get();
 }
 }
 

@@ -46,6 +46,23 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
+		if(timer.get()-Init::last_tim2>0.1){
+			setvbuf(stdout,NULL,_IOFBF,4096);
+			if(!FSBorYPA) Interactive::setcol(-3);
+			else Interactive::setcol(-1);
+			double _tim=timer.get()-Init::begin_tim,_pps=Init::cnt_block/_tim,_apm=Init::cnt_atk*60/_tim;
+			Interactive::go(17,-7);std::cout<<"    ",fflush(stdout);
+			Interactive::go(18,-7);std::cout<<"    ",fflush(stdout);
+			Interactive::go(16,-5,-Init::get_dig((int)_tim));
+			printf("%.2f S",_tim);fflush(stdout);
+			Interactive::go(17,-5,-Init::get_dig((int)_pps));
+			printf("%.2f PPS",_pps);fflush(stdout);
+			Interactive::go(18,-5,-Init::get_dig((int)_apm));
+			printf("%.2f APM",_apm);fflush(stdout);
+			Interactive::gotoxy(1,1);
+			setvbuf(stdout,NULL,_IONBF,0);
+			Init::last_tim2=timer.get();
+		}
 		if(Garbage==4&&timer.get()-Init::last_tim>time_interval){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
@@ -376,29 +393,29 @@ int play(map &mp,Block::block B,int flag_h=0){
 			Init::add_garbage(Init::last_hole,1,mp);
 		}
 	}
-	if(Garbage==2){
-		if(cnt_clear){
-			int basic=0,level_b2b=0;
-			if(cnt_clear==2) basic=1;
-			if(cnt_clear==3) basic=2;
-			if(cnt_clear==4) basic=4;
-			if(B.ty==5&&spin_flag){
-				if(!mini_flag) basic=cnt_clear*2;
-				else basic=(cnt_clear>=2);
-			}
-			int leveltable[10]={1,3,8,24,67,185,504,1370,1000000000};
-			for(int i=0;i<=8;i++) if(Init::b2b<=leveltable[i]){level_b2b=i;break;}
-			int atk=(basic+level_b2b)*(1+(Init::combo-1)*0.25);
-			if(!basic&&!level_b2b){
-				if(Init::combo<=2) atk=0;
-				else if(Init::combo<=6) atk=1;
-				else if(Init::combo<=16) atk=2;
-				else atk=3;
-			}
-			atk+=pc_flag*5+b2b_charging,atk=(int)(atk*garbage_multiple);
-			Init::add_garbage(rnd()%mapWidth,atk,mp);
+	int atk=0;
+	if(cnt_clear){
+		int basic=0,level_b2b=0;
+		if(cnt_clear==2) basic=1;
+		if(cnt_clear==3) basic=2;
+		if(cnt_clear==4) basic=4;
+		if(B.ty==5&&spin_flag){
+			if(!mini_flag) basic=cnt_clear*2;
+			else basic=(cnt_clear>=2);
 		}
+		int leveltable[10]={1,3,8,24,67,185,504,1370,1000000000};
+		for(int i=0;i<=8;i++) if(Init::b2b<=leveltable[i]){level_b2b=i;break;}
+		atk=(basic+level_b2b)*(1+(Init::combo-1)*0.25);
+		if(!basic&&!level_b2b){
+			if(Init::combo<=2) atk=0;
+			else if(Init::combo<=6) atk=1;
+			else if(Init::combo<=16) atk=2;
+			else atk=3;
+		}
+		atk+=pc_flag*5+b2b_charging;
 	}
+	if(Garbage==2) Init::add_garbage(rnd()%mapWidth,(int)(atk*garbage_multiple),mp);
+	Init::cnt_atk+=atk,Init::cnt_block++;
 	int dscore=0;
 	if(cnt_clear==1) dscore+=100;
 	if(cnt_clear==2) dscore+=300;
