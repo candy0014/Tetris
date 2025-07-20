@@ -46,19 +46,33 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
+		if(Model==2&&timer.get()-Init::begin_tim>lim_time){
+			B.put(x,y,type,mp,0);
+			if(!FSBorYPA) Interactive::setcol(-3);
+			else Interactive::setcol(-1);
+			Interactive::go(16,-8);std::cout<<"      ";
+			Interactive::go(16,-5,-1),std::cout<<"0.00";
+			return 0;
+		}
 		if(timer.get()-Init::last_tim2>0.1){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			if(!FSBorYPA) Interactive::setcol(-3);
 			else Interactive::setcol(-1);
 			double _tim=timer.get()-Init::begin_tim,_pps=Init::cnt_block/_tim,_apm=Init::cnt_atk*60/_tim;
 			Interactive::go(17,-7);std::cout<<"    ",fflush(stdout);
-			Interactive::go(18,-7);std::cout<<"    ",fflush(stdout);
+			if(Model==2){
+				Interactive::go(16,-8);std::cout<<"      ",fflush(stdout);
+				_tim=lim_time-_tim;
+			}
 			Interactive::go(16,-5,-Init::get_dig((int)_tim));
 			printf("%.2f S",_tim);fflush(stdout);
 			Interactive::go(17,-5,-Init::get_dig((int)_pps));
 			printf("%.2f PPS",_pps);fflush(stdout);
-			Interactive::go(18,-5,-Init::get_dig((int)_apm));
-			printf("%.2f APM",_apm);fflush(stdout);
+			if(Model!=1){
+				Interactive::go(18,-7);std::cout<<"    ",fflush(stdout);
+				Interactive::go(18,-5,-Init::get_dig((int)_apm));
+				printf("%.2f APM",_apm);fflush(stdout);
+			}
 			Interactive::gotoxy(1,1);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim2=timer.get();
@@ -430,6 +444,11 @@ int play(map &mp,Block::block B,int flag_h=0){
 	if(Init::combo) dscore+=50*(Init::combo-1);
 	Init::score+=dscore;
 	Init::print_score();
+	Init::cnt_line+=cnt_clear;
+	if(Model==1){
+		Interactive::go(18,-4,-Init::get_dig(Init::cnt_line)-Init::get_dig(lim_line));
+		std::cout<<Init::cnt_line<<"/"<<lim_line<<" LINES";
+	}
 	setvbuf(stdout,NULL,_IONBF,0);
 	Interactive::go(mapHeightP+2,0);
 	return 0;

@@ -37,7 +37,7 @@ int get_dig(long long x){
 }
 void print_score(){
 	if(FSBorYPA) Interactive::setcol(-1);
-	else Interactive::setcol(-2);
+	else Interactive::setcol(-3);
 	int dig=get_dig(score);
 	Interactive::gotoxy(mapHeightP+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
 	std::cout<<score;fflush(stdout);
@@ -52,8 +52,8 @@ void add_garbage(int pos,int height,map &mp){
 			if(mp[i+height][j]==-1) std::cout<<"  ";
 			else{
 				if(!Invisible||mp[i+height][j]==7){
-					if(version<=10) std::cout<<"█ ";
-					else std::cout<<"██";
+					if(version<=10) printf("█ ");//std::cout<<"█ ";
+					else printf("██");//std::cout<<"██";
 				}
 				else std::cout<<"  ";
 			}
@@ -67,8 +67,8 @@ void add_garbage(int pos,int height,map &mp){
 			Interactive::go(i,j),Interactive::setcol(mp[i][j]);
 			if(mp[i][j]==-1) std::cout<<"  ";
 			else{
-				if(version<=10) std::cout<<"█ ";
-				else std::cout<<"██";
+				if(version<=10) printf("█ ");//std::cout<<"█ ";
+				else printf("██");//std::cout<<"██";
 			}
 			fflush(stdout);
 		}
@@ -77,11 +77,13 @@ void add_garbage(int pos,int height,map &mp){
 double last_tim,last_tim2,begin_tim;
 int last_hole;
 int cnt_block,cnt_atk;
+int cnt_line;
 void init(){
 	system("cls");
 	now_hold=-1,board.clear(),combo=b2b=0;
 	cnt_block=cnt_atk=0;
-	// score=0;
+	cnt_line=0;
+	if(Model!=0) score=0;
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-3);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
@@ -129,8 +131,21 @@ void init(){
 		}
 	}
 	print_score();
+	double _tim=0;
+	if(Model==2) _tim=lim_time;
+	Interactive::go(16,-5,-Init::get_dig((int)_tim));
+	printf("%.2f S",_tim);fflush(stdout);
+	Interactive::go(17,-5,-1);
+	printf("0.00 PPS");fflush(stdout);
+	if(Model==1){
+		Interactive::go(18,-4,-Init::get_dig(Init::cnt_line)-2);
+		std::cout<<"0/"<<lim_line<<" LINES",fflush(stdout);
+	}
+	else{
+		Interactive::go(18,-5,-1);
+		printf("0.00 APM");fflush(stdout);
+	}
 	setvbuf(stdout,NULL,_IONBF,0);
-	last_tim=last_tim2=begin_tim=timer.get();
 }
 }
 
