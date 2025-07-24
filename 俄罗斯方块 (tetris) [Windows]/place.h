@@ -308,7 +308,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 				if(i==(type+2)%4||i==(type+3)%4) cnt2++;
 			}
 		}
-		if(cnt1>=3&&(cnt2==2||last_op==6)){
+		if(cnt1>=3&&(cnt2==2||last_op==5)){
 			Interactive::go(7,-7,1);
 			if(!FSBorYPA) Interactive::setcol(B.ty);
 			else Interactive::setcol(-1);
