@@ -5,18 +5,12 @@
 #include "init.h"
 #include "block.h"
 #include "timer.h"
+#include "setting.h"
 namespace Game{
 
 void game(){
 	int flag=0;
 	if(Model==1||Model==2){
-/*
-╭━━━━┓
-     ┃
- ━━━━┫
-     ┃
-╰━━━━╯
-*/
 		double tim=timer.get();
 		Interactive::setcol(3);
 		Interactive::go(1,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┏━━━┓";
@@ -24,12 +18,21 @@ void game(){
 		Interactive::go(3,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"  ━━┫";
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"    ┃";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┗━━━┛";
-		int fl=0;
-		for(auto x:KEY) if(custom[x]=="RE"&&Interactive::keydown(x)){fl=-1;break;}
+		int fl=0,fl2=0;
+		for(auto x:KEY){
+			if(custom[x]=="RE"&&Interactive::keydown(x)){fl=-1;break;}
+			if(custom[x]=="SET"&&Interactive::keydown(x)){fl2=-1;break;}
+		}
 		while(timer.get()-tim<1){
-			for(auto x:KEY) if(custom[x]=="RE"){
-				if(!Interactive::keydown(x)) fl=0;
-				if(Interactive::keydown(x)&&fl!=-1) return;
+			for(auto x:KEY){
+				if(custom[x]=="RE"){
+					if(!Interactive::keydown(x)) fl=0;
+					if(Interactive::keydown(x)&&fl!=-1) return;
+				}
+				if(custom[x]=="SET"){
+					if(!Interactive::keydown(x)) fl2=0;
+					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+				}
 			}
 		}
 		tim=timer.get();
@@ -39,9 +42,15 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┃    ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┗━━━┛";
 		while(timer.get()-tim<1){
-			for(auto x:KEY) if(custom[x]=="RE"){
-				if(!Interactive::keydown(x)) fl=0;
-				if(Interactive::keydown(x)&&fl!=-1) return;
+			for(auto x:KEY){
+				if(custom[x]=="RE"){
+					if(!Interactive::keydown(x)) fl=0;
+					if(Interactive::keydown(x)&&fl!=-1) return;
+				}
+				if(custom[x]=="SET"){
+					if(!Interactive::keydown(x)) fl2=0;
+					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+				}
 			}
 		}
 		tim=timer.get();
@@ -51,9 +60,15 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"  ┃  ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"  ┻  ";
 		while(timer.get()-tim<1){
-			for(auto x:KEY) if(custom[x]=="RE"){
-				if(!Interactive::keydown(x)) fl=0;
-				if(Interactive::keydown(x)&&fl!=-1) return;
+			for(auto x:KEY){
+				if(custom[x]=="RE"){
+					if(!Interactive::keydown(x)) fl=0;
+					if(Interactive::keydown(x)&&fl!=-1) return;
+				}
+				if(custom[x]=="SET"){
+					if(!Interactive::keydown(x)) fl2=0;
+					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+				}
 			}
 		}
 		tim=timer.get();
@@ -73,6 +88,10 @@ void game(){
 		setvbuf(stdout,NULL,_IONBF,0);
 		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!Open_hold));
 		if(res==2) return;
+		if(res==3){
+			Setting::setting();
+			return;
+		}
 		else if(res==1){
 			if(Init::now_hold!=-1) std::swap(Init::now_hold,Init::bl[i]),i--,flag=1;
 			else Init::now_hold=Init::bl[i],flag=1;

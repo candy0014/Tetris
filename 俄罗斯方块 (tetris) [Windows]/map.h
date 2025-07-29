@@ -7,7 +7,7 @@
 
 struct map {
 	struct line {
-		int rows[mapWidth];
+		int rows[105];
 
 		line() { memset(rows, 0xff, sizeof(rows)); }
 
@@ -20,18 +20,18 @@ struct map {
 		}
 	};
 
-	line mapP[mapHeightP], mapN[mapHeightN];
+	line mapP[105], mapN[105];
 
 	line &operator[](const int &pos) {
 		assert(-mapHeightN <= pos);
-		assert(pos < mapHeightP);
+		assert(pos < mapHeight);
 		if (pos >= 0) {
 			return mapP[pos];
 		}
 		return mapN[-pos - 1];
 	}
 	void clear(){
-		for(int i=0;i<mapHeightP;i++) mapP[i].clear();
+		for(int i=0;i<mapHeight;i++) mapP[i].clear();
 		for(int i=0;i<mapHeightN;i++) mapN[i].clear();
 	}
 };

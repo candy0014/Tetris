@@ -72,7 +72,7 @@ struct block{
 	bool check(int x,int y,int type,map mp){
 		for(int i=0;i<4;i++){
 			int tx=x+shape[type][i][0],ty=y+shape[type][i][1];
-			if(ty<0||ty>=mapWidth||tx>=mapHeightP) return 0;
+			if(ty<0||ty>=mapWidth||tx>=mapHeight) return 0;
 			if(mp[tx][ty]!=-1) return 0;
 		}
 		return 1;
@@ -91,7 +91,7 @@ struct block{
 			else std::cout<<"  ",fflush(stdout);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
-		Interactive::go(mapHeightP+2,0);
+		Interactive::go(mapHeight+2,0);
 	}
 	void put(int x,int y,int type,map mp,int op=1){
 		int xx=x;
@@ -144,7 +144,7 @@ struct block{
 		if(last_type==3&&type==1) op=11;
 		if(RotationSystem=="ARS"&&(ty==1||ty==2||ty==5)){
 			for(int tx=x-1;tx<=x+1;tx++) for(int ty=y-1;ty<=y+1;ty++){
-				if(tx>=mapHeightP||ty<0||ty>=mapWidth||mp[tx][ty]!=-1){
+				if(tx>=mapHeight||ty<0||ty>=mapWidth||mp[tx][ty]!=-1){
 					if(ty==y) return 0;
 					tx=x+1;break;
 				}

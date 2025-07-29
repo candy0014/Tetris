@@ -13,7 +13,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	int x=-2,y=(mapWidth-1)/2,type=0;
 	if(!B.check(x,y,type,mp)){
 		if(Invisible){
-			for(int i=mapHeightP-1;i>=-mapHeightN;i--){
+			for(int i=mapHeight-1;i>=-mapHeightN;i--){
 				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=-1){
 					Interactive::go(i,j);
 					Interactive::setcol(mp[i][j]);
@@ -33,7 +33,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	for(auto ii:KEY){
 		int i=(int)ii;
 		vis[i]=0,t[i]=timer.get();
-		if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F"||custom[i]=="HD"||custom[i]=="RE"){
+		if(custom[i]=="CW"||custom[i]=="CCW"||custom[i]=="F"||custom[i]=="HD"||custom[i]=="RE"||custom[i]=="SET"){
 			vis[i]=-Interactive::keydown(i);
 		}
 	}
@@ -109,6 +109,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 				break;
 			}
 			if(tmp&&custom[i]=="RE") return 2;
+			if(tmp&&custom[i]=="SET") return 3;
 			if(vis[i]&&!tmp){
 				vis[i]=0;
 				continue;
@@ -267,14 +268,14 @@ int play(map &mp,Block::block B,int flag_h=0){
 	for(int i=0;i<4;i++) mp[x+B.shape[type][i][0]][y+B.shape[type][i][1]]=B.ty;
 	int tag[105],cnt_clear=0,pc_flag=1;
 	int cnt_garbage=0;
-	for(int i=-mapHeightN;i<mapHeightP;i++){
+	for(int i=-mapHeightN;i<mapHeight;i++){
 		tag[i+mapHeightN]=1;
 		for(int j=0;j<mapWidth;j++){
 			if(mp[i][j]==-1){tag[i+mapHeightN]=0;break;}
 		}
 		for(int j=1;j<mapWidth&&pc_flag;j++) if(std::min(0,mp[i][j])!=std::min(0,mp[i][0])) pc_flag=0;
 		cnt_clear+=tag[i+mapHeightN];
-		if(tag[i+mapHeightN]&&i>=mapHeightP-layer_height) cnt_garbage++;
+		if(tag[i+mapHeightN]&&i>=mapHeight-layer_height) cnt_garbage++;
 	}
 	int b2b_flag=0,spin_flag=0,mini_flag=0;
 	setvbuf(stdout,NULL,_IOFBF,4096);
@@ -299,7 +300,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		int cnt1=0,cnt2=0,dx=0;
 		int _dir[4][2]={-1,-1,-1,1,1,1,1,-1};
 		if(RotationSystem=="ARS") dx=1;
-		for(int i=0;i<4;i++) if(x+_dir[i][0]+dx>=mapHeightP||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]+dx][y+_dir[i][1]]!=-1){
+		for(int i=0;i<4;i++) if(x+_dir[i][0]+dx>=mapHeight||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]+dx][y+_dir[i][1]]!=-1){
 			cnt1++;
 			if(RotationSystem=="SRS"){
 				if(i==type||i==(type+1)%4) cnt2++;
@@ -379,9 +380,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 		Interactive::go(14,-6,0);
 		std::cout<<"ＣＬＥＡＲ",fflush(stdout);
 	}
-	Interactive::go(mapHeightP+2,0);
-	int now=mapHeightP,flag=0;
-	for(int i=mapHeightP-1;i>=-mapHeightN;i--){
+	Interactive::go(mapHeight+2,0);
+	int now=mapHeight,flag=0;
+	for(int i=mapHeight-1;i>=-mapHeightN;i--){
 		now--;
 		while(now+mapHeightN>=1&&tag[now+mapHeightN]) now--,flag=1;
 		now=std::max(now,1-mapHeightN);
@@ -450,7 +451,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		std::cout<<Init::cnt_line<<"/"<<lim_line<<" LINES";
 	}
 	setvbuf(stdout,NULL,_IONBF,0);
-	Interactive::go(mapHeightP+2,0);
+	Interactive::go(mapHeight+2,0);
 	return 0;
 }
 

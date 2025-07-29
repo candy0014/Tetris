@@ -39,13 +39,13 @@ void print_score(){
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-3);
 	int dig=get_dig(score);
-	Interactive::gotoxy(mapHeightP+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
+	Interactive::gotoxy(mapHeight+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
 	std::cout<<score;fflush(stdout);
 }
 std::mt19937 rnd(time(0));
 void add_garbage(int pos,int height,map &mp){
-	height=std::min(height,mapHeightP+mapHeightN);
-	for(int i=-mapHeightN;i<mapHeightP-height;i++){
+	height=std::min(height,mapHeight+mapHeightN);
+	for(int i=-mapHeightN;i<mapHeight-height;i++){
 		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+height][j]){
 			Interactive::go(i,j);
 			Interactive::setcol(mp[i+height][j]);
@@ -61,7 +61,7 @@ void add_garbage(int pos,int height,map &mp){
 		}
 		mp[i]=mp[i+height];
 	}
-	for(int i=mapHeightP-height;i<mapHeightP;i++){
+	for(int i=mapHeight-height;i<mapHeight;i++){
 		for(int j=0;j<mapWidth;j++){
 			mp[i][j]=(j==pos)?-1:7;
 			Interactive::go(i,j),Interactive::setcol(mp[i][j]);
@@ -79,6 +79,12 @@ int last_hole;
 int cnt_block,cnt_atk;
 int cnt_line;
 void init(){
+	int lines=mapHeight+mapHeightN+3,cols=Margin*2+mapWidth*2;
+	std::string _l="",_c="";
+	while(lines) _l=char(lines%10+'0')+_l,lines/=10;
+	while(cols) _c=char(cols%10+'0')+_c,cols/=10;
+	std::string tmp="mode con cols="+_c+" lines="+_l;
+	system(tmp.c_str());
 	system("cls");
 	now_hold=-1,board.clear(),combo=b2b=0;
 	cnt_block=cnt_atk=0;
@@ -89,14 +95,14 @@ void init(){
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
 	for(int i=0;i<Bag;i++) shuffle(bl+i*7,bl+(i+1)*7,rd);
 	setvbuf(stdout,NULL,_IOFBF,4096);
-	for(int i=0;i<=mapHeightP;i++){
+	for(int i=0;i<=mapHeight;i++){
 		Interactive::gotoxy(i+mapHeightN,Margin-1);
-		std::cout<<"|+"[i==0||i==mapHeightP];
+		std::cout<<"|+"[i==0||i==mapHeight];
 		for(int j=0;j<mapWidth;j++){
-			if(i!=mapHeightP) std::cout<<"  ";
+			if(i!=mapHeight) std::cout<<"  ";
 			else std::cout<<"--";
 		}
-		std::cout<<"|+"[i==0||i==mapHeightP];
+		std::cout<<"|+"[i==0||i==mapHeight];
 		std::cout<<std::endl;
 	}
 	if(Open_hold){
@@ -110,7 +116,7 @@ void init(){
 	}
 	if(Next_num){
 		for(int i=0;i<=3*Next_num+2;i++){
-			if(i>=mapHeightP){
+			if(i>=mapHeight){
 				Interactive::gotoxy(i+mapHeightN,Margin+mapWidth*2);
 				if(i!=3*Next_num+2) std::cout<<"|";
 				else std::cout<<"+";
