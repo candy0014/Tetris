@@ -21,6 +21,7 @@ void gotoxy(int x,int y){
 }
 
 void go(int x,int y,int op=0){
+	if(Garbage==1&&y<0) y--;
 	gotoxy(x+mapHeightN,y*2+Margin+op);
 }
 void go_hold(int x,int y,int type){
@@ -33,18 +34,21 @@ void rgb_set(int wr,int wg,int wb,int br=12,int bg=12,int bb=12){
 	printf("\033[38;2;%d;%d;%dm\033[48;2;%d;%d;%dm",wr,wg,wb,br,bg,bb);
 }
 void setcol(int type){
-	if(type==-3){
+	if(type==-4){//red
+		rgb_set(202,70,77);
+	}
+	if(type==-3){//white
 		rgb_set(255,255,255);
 	}
 	if(type==-2){
 		rgb_set(204,204,204);
 		return;
 	}
-	if(type==-1){
+	if(type==-1){//grey
 		rgb_set(36,38,41);
 		return;
 	}
-	if(FSBorYPA){
+	if(FSBorYPA){//black
 		rgb_set(0,0,0);
 		return;
 	}

@@ -430,6 +430,18 @@ int play(map &mp,Block::block B,int flag_h=0){
 		atk+=pc_flag*5+b2b_charging;
 	}
 	if(Garbage==2) Init::add_garbage(rnd()%mapWidth,(int)(atk*garbage_multiple),mp);
+	if(Garbage==1){
+		int tmp=0;
+		if(cnt_clear){
+			if(Init::cnt_backfire>=atk) tmp=Init::cnt_backfire-atk;
+			else tmp=(atk-Init::cnt_backfire)*garbage_multiple;
+		}
+		else{
+			tmp=std::max(Init::cnt_backfire-8,0);
+			Init::add_garbage(rnd()%mapWidth,Init::cnt_backfire-tmp,mp);
+		}
+		Init::update_backfire(tmp);
+	}
 	Init::cnt_atk+=atk,Init::cnt_block++;
 	int dscore=0;
 	if(cnt_clear==1) dscore+=100;
