@@ -1,16 +1,26 @@
 #ifndef INTERACTIVE_H
 #define INTERACTIVE_H
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
+
 #include "config.h"
+#include <iostream>
 
 namespace Interactive{
 
 bool keydown(char g) {
+	#ifdef _WIN32
 	return GetAsyncKeyState(g) & 0x8000;
+	#endif
+	#ifdef __linux__
+	return keyhelper.keydown(g);
+	#endif
 }
 
 void gotoxy(int x,int y){
+	#ifdef _WIN32
 	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
 	HANDLE hConsoleOut;
 	hConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -18,10 +28,14 @@ void gotoxy(int x,int y){
 	csbiInfo.dwCursorPosition.Y = x;
 	csbiInfo.dwCursorPosition.X = y;
 	SetConsoleCursorPosition(hConsoleOut,csbiInfo.dwCursorPosition);
+	#endif
+	#ifdef __linux__
+	std::cout<<"\x1b["<<x+1<<";"<<y+1<<"H",std::cout.flush();
+	#endif
 }
 
 void go(int x,int y,int op=0){
-	if(Garbage==1&&y<0) y--;
+	if(GarbageModel==1&&y<0) y--;
 	gotoxy(x+mapHeightN,y*2+Margin+op);
 }
 void go_hold(int x,int y,int type){
@@ -31,7 +45,12 @@ void go_next(int id,int x,int y,int type){
 	go(x+3+id*3,y+mapWidth+2,(type!=0&&type!=3));
 }
 void rgb_set(int wr,int wg,int wb,int br=12,int bg=12,int bb=12){
+	#ifdef _WIN32
 	printf("\033[38;2;%d;%d;%dm\033[48;2;%d;%d;%dm",wr,wg,wb,br,bg,bb);
+	#endif
+	#ifdef __linux__
+	std::cout<<"\x1b[38;2;"+std::to_string(wr)+";"+std::to_string(wg)+";"+std::to_string(wb)+"m",std::cout.flush();
+	#endif
 }
 void setcol(int type){
 	if(type==-4){//red

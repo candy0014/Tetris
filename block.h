@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "interactive.h"
+#include "function.h"
 #include <iostream>
 
 namespace Block{
@@ -83,12 +84,7 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go(x+shape[type][i][0],y+shape[type][i][1]);
-			if(op){
-				if(version<=10) std::cout<<"█ ";
-				else std::cout<<"██";
-				fflush(stdout);
-			}
-			else std::cout<<"  ",fflush(stdout);
+			Function::put_square(op);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::go(mapHeight+2,0);
@@ -105,27 +101,17 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go_hold(shape[0][i][0]+dx,shape[0][i][1],ty);
-			if(op){
-				if(version<=10) std::cout<<"█ ";
-				else std::cout<<"██";
-				fflush(stdout);
-			}
-			else std::cout<<"  ",fflush(stdout);
+			Function::put_square(op);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::gotoxy(1,1);
 	}
 	void put_next(int x,int op=1){
-		if(Next_num==0) return;
+		if(NextNum==0) return;
 		Interactive::setcol(ty);
 		for(int i=0;i<4;i++){
 			Interactive::go_next(x,shape[0][i][0]+dx,shape[0][i][1],ty);
-			if(op){
-				if(version<=10) std::cout<<"█ ";
-				else std::cout<<"██";
-				fflush(stdout);
-			}
-			else std::cout<<"  ",fflush(stdout);
+			Function::put_square(op);
 		}
 	}
 	bool checks(int &x,int &y,int last_type,int type,map mp,int &rotate_op){

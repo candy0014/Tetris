@@ -5,6 +5,7 @@
 #include "block.h"
 #include "map.h"
 #include "init.h"
+#include "function.h"
 
 namespace Place{
 
@@ -17,19 +18,19 @@ int play(map &mp,Block::block B,int flag_h=0){
 				for(int j=0;j<mapWidth;j++) if(mp[i][j]!=-1){
 					Interactive::go(i,j);
 					Interactive::setcol(mp[i][j]);
-					if(version<=10) std::cout<<"█ ";
-					else std::cout<<"██";
+					Function::put_square();
 				}
 			}
-			Sleep(500);
+			timer.sleep(0.5);
 		} 
-		Sleep(1000);
+		timer.sleep(1);
 		return 2;
 	}
 	B.put(x,y,type,mp);
 	double tim=timer.get();
 	int vis[128];
 	double t[128];
+	for(int i=0;i<128;i++) vis[i]=0,t[i]=0;
 	for(auto ii:KEY){
 		int i=(int)ii;
 		vis[i]=0,t[i]=timer.get();
@@ -46,7 +47,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
-		if(Model==2&&timer.get()-Init::begin_tim>lim_time){
+		if(Model==2&&timer.get()-Init::begin_tim>BlitzTime){
 			B.put(x,y,type,mp,0);
 			if(!FSBorYPA) Interactive::setcol(-3);
 			else Interactive::setcol(-1);
@@ -62,27 +63,27 @@ int play(map &mp,Block::block B,int flag_h=0){
 			Interactive::go(17,-7);std::cout<<"    ",fflush(stdout);
 			if(Model==2){
 				Interactive::go(16,-8);std::cout<<"      ",fflush(stdout);
-				_tim=lim_time-_tim;
+				_tim=BlitzTime-_tim;
 			}
-			Interactive::go(16,-5,-Init::get_dig((int)_tim));
+			Interactive::go(16,-5,-Function::get_dig((int)_tim));
 			printf("%.2f S",_tim);fflush(stdout);
-			Interactive::go(17,-5,-Init::get_dig((int)_pps));
+			Interactive::go(17,-5,-Function::get_dig((int)_pps));
 			printf("%.2f PPS",_pps);fflush(stdout);
 			if(Model!=1){
 				Interactive::go(18,-7);std::cout<<"    ",fflush(stdout);
-				Interactive::go(18,-5,-Init::get_dig((int)_apm));
+				Interactive::go(18,-5,-Function::get_dig((int)_apm));
 				printf("%.2f APM",_apm);fflush(stdout);
 			}
 			Interactive::gotoxy(1,1);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim2=timer.get();
 		}
-		if(Garbage==4&&timer.get()-Init::last_tim>time_interval){
+		if(GarbageModel==4&&timer.get()-Init::last_tim>TimeInterval){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
 			if(!B.check(x+1,y,type,mp)) x--;
-			if(rnd()%1000000<1000000*cheese_messiness) Init::last_hole=rnd()%mapWidth;
-			Init::add_garbage(Init::last_hole,1,mp);
+			if(rnd()%1000000<1000000*CheeseMessiness) Init::last_hole=rnd()%mapWidth;
+			Garbage::add_garbage(Init::last_hole,1,mp);
 			B.put(x,y,type,mp);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim=timer.get();
@@ -90,7 +91,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		if(timer.get()-tim>EPLD){
 			if(!B.check(x+1,y,type,mp)) break;
 		}
-		if(timer.get()-tim>SPE){
+		if(timer.get()-tim>Speed){
 			if(B.check(x+1,y,type,mp)) B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get(),last_op=0;
 		}
 		int last_x=x,last_y=y,last_type=type;
@@ -132,7 +133,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+2)%4,mp,rotate_op)){
 							type=(type+2)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get(),last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
 						}
 					}
 				}
@@ -145,7 +146,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+3)%4,mp,rotate_op)){
 							type=(type+3)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get(),last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
 						}
 					}
 				}
@@ -158,7 +159,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+1)%4,mp,rotate_op)){
 							type=(type+1)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get(),last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
 						}
 					}
 				}
@@ -172,7 +173,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						int flag=!B.check(x+1,y,type,mp);
 						if(B.check(x,y-1,type,mp)){
 							y--,cnt_op+=flag,last_op=0;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 						}
 					}
 				}
@@ -185,7 +186,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 						int flag=!B.check(x+1,y,type,mp);
 						if(B.check(x,y+1,type,mp)){
 							y++,cnt_op+=flag,last_op=0;
-							if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 						}
 					}
 				}
@@ -196,7 +197,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 					if(SDF==0){
 						while(B.check(x+1,y,type,mp)) x++,Init::score++,tim=timer.get();
 					}
-					else if(timer.get()-t[i]>SPE/SDF){
+					else if(timer.get()-t[i]>Speed/SDF){
 						t[i]=timer.get();
 						if(B.check(x+1,y,type,mp)) x++,tim=timer.get(),Init::score++;
 					}
@@ -213,7 +214,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 								int flag=!B.check(x+1,y,type,mp);
 								if(B.check(x,y-1,type,mp)){
 									y--,cnt_op+=flag,last_op=0;
-									if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+									if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 								}
 							}
 						}
@@ -222,7 +223,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 							int flag=!B.check(x+1,y,type,mp);
 							if(B.check(x,y-1,type,mp)){
 								y--,cnt_op+=flag,last_op=0;
-								if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+								if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 							}
 						}
 					}
@@ -239,7 +240,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 								int flag=!B.check(x+1,y,type,mp);
 								if(B.check(x,y+1,type,mp)){
 									y++,cnt_op+=flag,last_op=0;
-									if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+									if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 								}
 							}
 						}
@@ -248,7 +249,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 							int flag=!B.check(x+1,y,type,mp);
 							if(B.check(x,y+1,type,mp)){
 								y++,cnt_op+=flag,last_op=0;
-								if(flag&&cnt_op<=EPLD_lim) tim=timer.get();
+								if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 							}
 						}
 					}
@@ -275,7 +276,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		for(int j=1;j<mapWidth&&pc_flag;j++) if(std::min(0,mp[i][j])!=std::min(0,mp[i][0])) pc_flag=0;
 		cnt_clear+=tag[i+mapHeightN];
-		if(tag[i+mapHeightN]&&i>=mapHeight-layer_height) cnt_garbage++;
+		if(tag[i+mapHeightN]&&i>=mapHeight-LayerHeight) cnt_garbage++;
 	}
 	int b2b_flag=0,spin_flag=0,mini_flag=0;
 	setvbuf(stdout,NULL,_IOFBF,4096);
@@ -390,22 +391,14 @@ int play(map &mp,Block::block B,int flag_h=0){
 		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[now][j]){
 			Interactive::go(i,j);
 			Interactive::setcol(mp[now][j]);
-			if(mp[now][j]==-1) std::cout<<"  ";
-			else{
-				if(!Invisible||mp[now][j]==7){
-					if(version<=10) std::cout<<"█ ";
-					else std::cout<<"██";
-				}
-				else std::cout<<"  ";
-			}
-			fflush(stdout);
+			Function::put_square(mp[now][j]!=-1&&(!Invisible||mp[now][j]==7));
 		}
 		mp[i]=mp[now];
 	}
-	if(Garbage==3){
+	if(GarbageModel==3){
 		while(cnt_garbage--){
-			if(rnd()%1000000<1000000*cheese_messiness) Init::last_hole=rnd()%mapWidth;
-			Init::add_garbage(Init::last_hole,1,mp);
+			if(rnd()%1000000<1000000*CheeseMessiness) Init::last_hole=rnd()%mapWidth;
+			Garbage::add_garbage(Init::last_hole,1,mp);
 		}
 	}
 	int atk=0;
@@ -429,18 +422,18 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		atk+=pc_flag*5+b2b_charging;
 	}
-	if(Garbage==2) Init::add_garbage(rnd()%mapWidth,(int)(atk*garbage_multiple),mp);
-	if(Garbage==1){
-		int tmp=0;
+	if(GarbageModel==2) Garbage::add_garbage(rnd()%mapWidth,(int)(atk*GarbageMultiple),mp);
+	if(GarbageModel==1){
+		int tmp=Init::cnt_backfire;
 		if(cnt_clear){
 			if(Init::cnt_backfire>=atk) tmp=Init::cnt_backfire-atk;
-			else tmp=(atk-Init::cnt_backfire)*garbage_multiple;
+			else tmp=(atk-Init::cnt_backfire)*GarbageMultiple,Init::tim_backfire=timer.get();
 		}
-		else{
+		else if(timer.get()-Init::tim_backfire>=0.3){
 			tmp=std::max(Init::cnt_backfire-8,0);
-			Init::add_garbage(rnd()%mapWidth,Init::cnt_backfire-tmp,mp);
+			Garbage::add_garbage(rnd()%mapWidth,Init::cnt_backfire-tmp,mp);
 		}
-		Init::update_backfire(tmp);
+		Garbage::update_backfire(tmp,Init::cnt_backfire);
 	}
 	Init::cnt_atk+=atk,Init::cnt_block++;
 	int dscore=0;
@@ -456,11 +449,11 @@ int play(map &mp,Block::block B,int flag_h=0){
 	if(b2b_flag==1&&Init::b2b>=2) dscore=dscore*1.5;
 	if(Init::combo) dscore+=50*(Init::combo-1);
 	Init::score+=dscore;
-	Init::print_score();
+	Function::print_score(Init::score);
 	Init::cnt_line+=cnt_clear;
 	if(Model==1){
-		Interactive::go(18,-4,-Init::get_dig(Init::cnt_line)-Init::get_dig(lim_line));
-		std::cout<<Init::cnt_line<<"/"<<lim_line<<" LINES";
+		Interactive::go(18,-4,-Function::get_dig(Init::cnt_line)-Function::get_dig(RacingDistance));
+		std::cout<<Init::cnt_line<<"/"<<RacingDistance<<" LINES";
 	}
 	setvbuf(stdout,NULL,_IONBF,0);
 	Interactive::go(mapHeight+2,0);

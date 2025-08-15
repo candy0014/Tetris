@@ -78,15 +78,15 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 	}
-	Init::last_tim=Init::last_tim2=Init::begin_tim=timer.get();
+	Init::last_tim=Init::last_tim2=Init::begin_tim=Init::tim_backfire=timer.get();
 	for(int i=0;i<Bag*7;i++){
 		setvbuf(stdout,NULL,_IOFBF,4096);
-		for(int j=0;j<Next_num;j++){
+		for(int j=0;j<NextNum;j++){
 			Block::get_block(Init::bl[i+j]).put_next(j,0);
 			Block::get_block(Init::bl[i+j+1]).put_next(j);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
-		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!Open_hold));
+		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!OpenHold));
 		if(res==2) return;
 		if(res==3){
 			Setting::setting();
@@ -100,17 +100,17 @@ void game(){
 			if(flag) Block::get_block(Init::now_hold).put_hold();
 			flag=0;
 		}
-		if(Model==1&&Init::cnt_line>=lim_line) break;
-		if(Model==2&&timer.get()-Init::begin_tim>lim_time) break;
+		if(Model==1&&Init::cnt_line>=RacingDistance) break;
+		if(Model==2&&timer.get()-Init::begin_tim>BlitzTime) break;
 	}
 	if(Model==1||Model==2){
 		if(Model==1){
 			double tim=timer.get()-Init::begin_tim;
-			Interactive::setcol(3),Interactive::go(1,mapWidth/2,-((mapWidth%2==0)+(Init::get_dig((int)tim))+4)/2);
+			Interactive::setcol(3),Interactive::go(1,mapWidth/2,-((mapWidth%2==0)+(Function::get_dig((int)tim))+4)/2);
 			printf("%.3f",tim);
 		}
 		if(Model==2){
-			Interactive::setcol(3),Interactive::go(1,mapWidth/2,-((mapWidth%2==0)+Init::get_dig(Init::score))/2);
+			Interactive::setcol(3),Interactive::go(1,mapWidth/2,-((mapWidth%2==0)+Function::get_dig(Init::score))/2);
 			std::cout<<Init::score;
 		}
 		while(1){

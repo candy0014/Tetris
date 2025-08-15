@@ -4,6 +4,7 @@
 #include "interactive.h"
 #include "timer.h"
 #include "init.h"
+#include "function.h"
 
 namespace Setting{
 	struct node{
@@ -41,51 +42,57 @@ namespace Setting{
 		if(op) Interactive::setcol(-3);
 	}
 	void setting(){
-		system("cls");
+		Function::clear();
 		cnt_var=0;
-		insert0("Windows Version",&version);
+		insert0("Windows Version",&WindowsVersion);
 		insert2("Rotation System",&RotationSystem);
-		insert1("Speed",&SPE);
+		insert1("Speed",&Speed);
 		insert1("SDF",&SDF);
 		insert1("DAS",&DAS);
 		insert1("ARR",&ARR);
 		insert0("Width",&mapWidth);
 		insert0("Height",&mapHeight);
-		insert0("Num of Next",&Next_num);
-		insert0("Open Hold",&Open_hold);
+		insert0("Num of Next",&NextNum);
+		insert0("Open Hold",&OpenHold);
 		insert0("Invisible",&Invisible);
 		insert0("Ghost",&Ghost);
 		insert0("Model",&Model);
-		insert0("Racing Distance",&lim_line);
-		insert1("Blitz Time",&lim_time);
-		insert0("Garbage",&Garbage);
-		insert0("Layer Height",&layer_height);
-		insert1("Time Interval",&time_interval);
-		insert1("Cheese Messiness",&cheese_messiness);
-		insert1("Garbage Multiple",&garbage_multiple);
+		insert0("Racing Distance",&RacingDistance);
+		insert1("Blitz Time",&BlitzTime);
+		insert0("Garbage Model",&GarbageModel);
+		insert0("Layer Height",&LayerHeight);
+		insert1("Time Interval",&TimeInterval);
+		insert1("Cheese Messiness",&CheeseMessiness);
+		insert1("Garbage Multiple",&GarbageMultiple);
 		insert1("EPLD",&EPLD);
-		insert0("Limit of EPLD",&EPLD_lim);
+		insert0("Limit of EPLD",&EPLDLim);
 		insert0("FSBorYPA",&FSBorYPA);
 		Interactive::setcol(-3);
 		for(int i=0;i<cnt_var;i++) print(i);
 		int now=0;print(0,1);
 		int vis[128];
 		double t[128];
-		for(auto i:{VK_UP,VK_DOWN}) t[i]=timer.get(),vis[i]=-Interactive::keydown(i);
+		for(int i=0;i<128;i++) vis[i]=0,t[i]=0;
+		for(auto i:{KEY_UP,KEY_DOWN}) t[i]=timer.get(),vis[i]=-Interactive::keydown(i);
 		std::vector<char>letter;
 		for(int i=0;i<26;i++) letter.emplace_back(i+'A');
 		for(int i=0;i<10;i++) letter.emplace_back(i+'0');
 		while(1){
 			for(auto i:KEY) if(custom[i]=="RE"&&Interactive::keydown(i)) return;
-			for(auto i:{VK_UP,VK_DOWN,VK_RETURN}){
+			for(auto i:{KEY_UP,KEY_DOWN,KEY_ENTER}){
 				int tmp=Interactive::keydown(i);
 				if(!vis[i]&&!tmp) continue;
 				if(vis[i]&&!tmp){
-					if(vis[i]!=-1&&i==VK_RETURN){
+					if(vis[i]!=-1&&i==KEY_ENTER){
 						print(now,2);
 						Interactive::gotoxy(now+1,var[now].name.length()+2);
-						Init::cur_show();
+						Function::cur_show();
+						#ifdef _WIN32
 						FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+						#endif
+						#ifdef __linux__
+						tcflush(STDIN_FILENO,TCIFLUSH);
+						#endif
 						std::string tmp;
 						if(!FSBorYPA) Interactive::setcol(3);
 						else Interactive::setcol(-1);
@@ -110,37 +117,38 @@ namespace Setting{
 							if(var[now].c!=NULL) (*var[now].c)=tmp;
 						}
 						print(now,1);
-						Init::cur_hide();
+						Function::cur_hide();
 						vis[i]=-1;
 						if(var[now].name=="FSBorYPA"){
 							for(int j=0;j<cnt_var;j++) print(j);
 							print(now,1);
 						}
+						timer.sleep(0.1);
 					}
 					else vis[i]=0;
 					continue;
 				}
 				else if(!vis[i]&&tmp){
 					t[i]=timer.get(),vis[i]=1;
-					if(i==VK_UP){
+					if(i==KEY_UP){
 						double ma_tim=0;int mak=0;
-						for(auto d:{VK_UP,VK_DOWN}) if(vis[d]){
+						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
 						if(mak==i&&now) print(now),now--,print(now,1);
 					}
-					if(i==VK_DOWN){
+					if(i==KEY_DOWN){
 						double ma_tim=0;int mak=0;
-						for(auto d:{VK_UP,VK_DOWN}) if(vis[d]){
+						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
 						if(mak==i&&now+1<cnt_var) print(now),now++,print(now,1);
 					}
 				}
 				else if(vis[i]&&tmp){
-					if(i==VK_UP){
+					if(i==KEY_UP){
 						double ma_tim=0;int mak=0;
-						for(auto d:{VK_UP,VK_DOWN}) if(vis[d]){
+						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
 						if(mak==i){
@@ -156,9 +164,9 @@ namespace Setting{
 							}
 						}
 					}
-					if(i==VK_DOWN){
+					if(i==KEY_DOWN){
 						double ma_tim=0;int mak=0;
-						for(auto d:{VK_UP,VK_DOWN}) if(vis[d]){
+						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
 						if(mak==i){
