@@ -115,7 +115,10 @@ void game(){
 		}
 		while(1){
 			int flag=0;
-			for(auto x:KEY) if(custom[x]=="RE"&&Interactive::keydown(x)){flag=1;break;}
+			for(auto x:KEY){
+				if(custom[x]=="RE"&&Interactive::keydown(x)){flag=1;break;}
+				if(custom[x]=="SET"&&Interactive::keydown(x)){Setting::setting();return;}
+			}
 			if(flag) break;
 		}
 	}

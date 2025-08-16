@@ -99,7 +99,7 @@ void init(){
 	Interactive::go(17,-5,-1);
 	printf("0.00 PPS");fflush(stdout);
 	if(Model==1){
-		Interactive::go(18,-4,-Function::get_dig(Init::cnt_line)-2);
+		Interactive::go(18,-4,-Function::get_dig(Init::cnt_line)-Function::get_dig(RacingDistance));
 		std::cout<<"0/"<<RacingDistance<<" LINES",fflush(stdout);
 	}
 	else{
