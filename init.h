@@ -2,10 +2,7 @@
 #define INIT_H
 
 #include "block.h"
-#include "map.h"
-#include "config.h"
 #include "timer.h"
-#include "function.h"
 #include "garbage.h"
 
 #include <random>
@@ -26,13 +23,12 @@ short now_hold;
 int combo,b2b;
 long long score;
 double last_tim,last_tim2,begin_tim;
-int last_hole;
 int cnt_block,cnt_atk;
 int cnt_line;
 int cnt_backfire;
 double tim_backfire;
 void init(){
-	int lines=mapHeight+mapHeightN+3,cols=Margin*2+mapWidth*2;
+	int lines=std::max(31,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
 	std::string _l="",_c="";
 	while(lines) _l=char(lines%10+'0')+_l,lines/=10;
@@ -45,6 +41,7 @@ void init(){
 	cnt_block=cnt_atk=0;
 	cnt_line=0,cnt_backfire=0;
 	if(Model!=0) score=0;
+	Garbage::init();
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-3);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
@@ -62,6 +59,14 @@ void init(){
 	}
 	if(OpenHold){
 		for(int i=0;i<=5;i++){
+			if(i>=mapHeight){
+				if(GarbageModel!=1){
+					Interactive::gotoxy(i+mapHeightN,Margin-1);
+					if(i!=5) std::cout<<"|";
+					else std::cout<<"+";
+					fflush(stdout);
+				}
+			}
 			Interactive::gotoxy(i+mapHeightN,Margin-12-2*(GarbageModel==1));
 			if(i==0) std::cout<<"+---HOLD---";
 			else if(i!=5) std::cout<<"|";
@@ -75,6 +80,7 @@ void init(){
 				Interactive::gotoxy(i+mapHeightN,Margin+mapWidth*2);
 				if(i!=3*NextNum+2) std::cout<<"|";
 				else std::cout<<"+";
+				fflush(stdout);
 			}
 			Interactive::gotoxy(i+mapHeightN,Margin+mapWidth*2+1);
 			if(i==0) std::cout<<"---NEXT---+";
@@ -84,12 +90,8 @@ void init(){
 		}
 	}
 	for(int i=0;i<NextNum;i++) Block::get_block(bl[i]).put_next(i);
-	last_hole=rd()%mapWidth;
 	if(GarbageModel==3){
-		for(int i=1;i<=LayerHeight;i++){
-			if(rd()%1000000<1000000*CheeseMessiness) last_hole=rd()%mapWidth;
-			Garbage::add_garbage(last_hole,1,board);
-		}
+		Garbage::add_garbage(LayerHeight,board,1);
 	}
 	Function::print_score(score);
 	double _tim=0;

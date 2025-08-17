@@ -2,7 +2,6 @@
 #define BLOCK_H
 
 #include "map.h"
-#include "interactive.h"
 #include "function.h"
 #include <iostream>
 

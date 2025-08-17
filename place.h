@@ -1,11 +1,7 @@
 #ifndef PLACE_H
 #define PLACE_H
 
-#include "timer.h"
-#include "block.h"
-#include "map.h"
 #include "init.h"
-#include "function.h"
 
 namespace Place{
 
@@ -82,8 +78,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
 			if(!B.check(x+1,y,type,mp)) x--;
-			if(rnd()%1000000<1000000*CheeseMessiness) Init::last_hole=rnd()%mapWidth;
-			Garbage::add_garbage(Init::last_hole,1,mp);
+			Garbage::add_garbage(1,mp);
 			B.put(x,y,type,mp);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim=timer.get();
@@ -396,10 +391,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		mp[i]=mp[now];
 	}
 	if(GarbageModel==3){
-		while(cnt_garbage--){
-			if(rnd()%1000000<1000000*CheeseMessiness) Init::last_hole=rnd()%mapWidth;
-			Garbage::add_garbage(Init::last_hole,1,mp);
-		}
+		Garbage::add_garbage(cnt_garbage,mp);
 	}
 	int atk=0;
 	if(cnt_clear){
@@ -422,7 +414,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		atk+=pc_flag*5+b2b_charging;
 	}
-	if(GarbageModel==2) Garbage::add_garbage(rnd()%mapWidth,(int)(atk*GarbageMultiple),mp);
+	if(GarbageModel==2) Garbage::add_garbage((int)(atk*GarbageMultiple),mp);
 	if(GarbageModel==1){
 		int tmp=Init::cnt_backfire;
 		if(cnt_clear){
@@ -431,7 +423,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		else if(timer.get()-Init::tim_backfire>=0.3){
 			tmp=std::max(Init::cnt_backfire-8,0);
-			Garbage::add_garbage(rnd()%mapWidth,Init::cnt_backfire-tmp,mp);
+			Garbage::add_garbage(Init::cnt_backfire-tmp,mp);
 		}
 		Garbage::update_backfire(tmp,Init::cnt_backfire);
 	}

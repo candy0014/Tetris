@@ -1,9 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-#include "config.h"
 #include "interactive.h"
-#include "init.h"
 #include <iostream>
 #ifdef __linux__
 #include <termios.h>

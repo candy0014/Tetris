@@ -14,16 +14,20 @@ namespace Setting{
 		std::string *c;
 	}var[105];
 	int cnt_var;
+	int lin[105],cnt_lin;
 	void insert0(std::string name,int *a){
 		var[cnt_var].name=name,var[cnt_var].a=a,var[cnt_var].b=NULL,var[cnt_var].c=NULL;
+		lin[cnt_var]=++cnt_lin;
 		cnt_var++;
 	}
 	void insert1(std::string name,double *a){
 		var[cnt_var].name=name,var[cnt_var].a=NULL,var[cnt_var].b=a,var[cnt_var].c=NULL;
+		lin[cnt_var]=++cnt_lin;
 		cnt_var++;
 	}
 	void insert2(std::string name,std::string *a){
 		var[cnt_var].name=name,var[cnt_var].a=NULL,var[cnt_var].b=NULL,var[cnt_var].c=a;
+		lin[cnt_var]=++cnt_lin;
 		cnt_var++;
 	}
 	void print(int i,int op=0){
@@ -31,7 +35,7 @@ namespace Setting{
 			if(!FSBorYPA) Interactive::setcol(3);
 			else Interactive::setcol(-1);
 		}
-		Interactive::gotoxy(i+1,1);
+		Interactive::gotoxy(lin[i],1);
 		std::cout<<var[i].name<<"=";
 		if(op==2) std::cout<<"                    ";
 		else{
@@ -43,29 +47,35 @@ namespace Setting{
 	}
 	void setting(){
 		Function::clear();
-		cnt_var=0;
-		insert0("Windows Version",&WindowsVersion);
-		insert2("Rotation System",&RotationSystem);
+		cnt_var=0,cnt_lin=0;
+		insert0("Model",&Model);
+		insert0("Racing Distance",&RacingDistance);
+		insert1("Blitz Time",&BlitzTime);
+		cnt_lin++;
+		insert0("Garbage Model",&GarbageModel);
+		insert0("Cheese Model",&CheeseModel);
+		insert0("Num of Hole",&HoleNum);
+		insert0("Layer Height",&LayerHeight);
+		insert1("Time Interval",&TimeInterval);
+		insert1("Cheese Messiness",&CheeseMessiness);
+		insert1("Garbage Multiple",&GarbageMultiple);
+		cnt_lin++;
 		insert1("Speed",&Speed);
 		insert1("SDF",&SDF);
 		insert1("DAS",&DAS);
 		insert1("ARR",&ARR);
+		cnt_lin++;
 		insert0("Width",&mapWidth);
 		insert0("Height",&mapHeight);
 		insert0("Num of Next",&NextNum);
 		insert0("Open Hold",&OpenHold);
 		insert0("Invisible",&Invisible);
 		insert0("Ghost",&Ghost);
-		insert0("Model",&Model);
-		insert0("Racing Distance",&RacingDistance);
-		insert1("Blitz Time",&BlitzTime);
-		insert0("Garbage Model",&GarbageModel);
-		insert0("Layer Height",&LayerHeight);
-		insert1("Time Interval",&TimeInterval);
-		insert1("Cheese Messiness",&CheeseMessiness);
-		insert1("Garbage Multiple",&GarbageMultiple);
 		insert1("EPLD",&EPLD);
 		insert0("Limit of EPLD",&EPLDLim);
+		insert2("Rotation System",&RotationSystem);
+		cnt_lin++;
+		insert0("Windows Version",&WindowsVersion);
 		insert0("FSBorYPA",&FSBorYPA);
 		Interactive::setcol(-3);
 		for(int i=0;i<cnt_var;i++) print(i);
@@ -85,7 +95,7 @@ namespace Setting{
 				if(vis[i]&&!tmp){
 					if(vis[i]!=-1&&i==KEY_ENTER){
 						print(now,2);
-						Interactive::gotoxy(now+1,var[now].name.length()+2);
+						Interactive::gotoxy(lin[now],var[now].name.length()+2);
 						Function::cur_show();
 						#ifdef _WIN32
 						FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
@@ -99,9 +109,12 @@ namespace Setting{
 						getline(std::cin,tmp);
 						if(tmp.length()){
 							if(var[now].a!=NULL){
-								int v=0;
-								for(int j=0;j<(int)tmp.length();j++) if('0'<=tmp[j]&&tmp[j]<='9') v=v*10+tmp[j]-'0';
-								(*var[now].a)=v;
+								int v=0,flag=1;
+								for(int j=0;j<(int)tmp.length();j++){
+									if('0'<=tmp[j]&&tmp[j]<='9') v=v*10+tmp[j]-'0';
+									if(tmp[j]=='-'&&v==0&&flag==1) flag=-1;
+								}
+								(*var[now].a)=v*flag;
 							}
 							if(var[now].b!=NULL){
 								double v=0,w=1;int flag=0;
@@ -135,14 +148,14 @@ namespace Setting{
 						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
-						if(mak==i&&now) print(now),now--,print(now,1);
+						if(mak==i) print(now),now=(now-1+cnt_var)%cnt_var,print(now,1);
 					}
 					if(i==KEY_DOWN){
 						double ma_tim=0;int mak=0;
 						for(auto d:{KEY_UP,KEY_DOWN}) if(vis[d]){
 							if(ma_tim<t[d]) ma_tim=t[d],mak=d;
 						}
-						if(mak==i&&now+1<cnt_var) print(now),now++,print(now,1);
+						if(mak==i) print(now),now=(now+1)%cnt_var,print(now,1);
 					}
 				}
 				else if(vis[i]&&tmp){
@@ -155,12 +168,12 @@ namespace Setting{
 							if(vis[i]==1){
 								if(timer.get()-t[i]>0.2){
 									t[i]=timer.get(),vis[i]=2;
-									if(now) print(now),now--,print(now,1);
+									print(now),now=(now-1+cnt_var)%cnt_var,print(now,1);
 								}
 							}
 							else if(timer.get()-t[i]>0.05){
 								t[i]=timer.get();
-								if(now) print(now),now--,print(now,1);
+								print(now),now=(now-1+cnt_var)%cnt_var,print(now,1);
 							}
 						}
 					}
@@ -173,12 +186,12 @@ namespace Setting{
 							if(vis[i]==1){
 								if(timer.get()-t[i]>0.2){
 									t[i]=timer.get(),vis[i]=2;
-									if(now+1<cnt_var) print(now),now++,print(now,1);
+									print(now),now=(now+1)%cnt_var,print(now,1);
 								}
 							}
 							else if(timer.get()-t[i]>0.05){
 								t[i]=timer.get();
-								if(now+1<cnt_var) print(now),now++,print(now,1);
+								print(now),now=(now+1)%cnt_var,print(now,1);
 							}
 						}
 					}
