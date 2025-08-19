@@ -70,6 +70,7 @@ namespace Setting{
 		insert0("Num of Next",&NextNum);
 		insert0("Open Hold",&OpenHold);
 		insert0("Invisible",&Invisible);
+		insert0("Anti Gravity",&AntiGravity);
 		insert0("Ghost",&Ghost);
 		insert1("EPLD",&EPLD);
 		insert0("Limit of EPLD",&EPLDLim);

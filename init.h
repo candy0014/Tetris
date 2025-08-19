@@ -28,7 +28,7 @@ int cnt_line;
 int cnt_backfire;
 double tim_backfire;
 void init(){
-	int lines=std::max(31,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
+	int lines=std::max(32,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
 	std::string _l="",_c="";
 	while(lines) _l=char(lines%10+'0')+_l,lines/=10;

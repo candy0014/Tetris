@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <linux/input.h>
 #include "keyhelper.h"
-KEYHELPER keyhelper("/dev/input/event0"); // 请按实际情况配置，见 readme
+KEYHELPER keyhelper("/dev/input/event3"); // 请按实际情况配置，见 readme
 #endif
 
 namespace Config{
@@ -45,6 +45,7 @@ int mapHeight=20; //地图高度
 int NextNum=5; //Next 显示个数，设为 0 则不显示
 int OpenHold=1; //是否允许 Hold
 int Invisible=0; //启用隐形块
+int AntiGravity=0; //启用反重力
 int Ghost=1; //阴影块（方块落点）
 double EPLD=0.5; //锁定延迟（移动重置）
 int EPLDLim=15; //移动重置重置次数限制
@@ -92,6 +93,7 @@ struct Temp{
 		custom[KEY_LEFT]="L";
 		custom[KEY_RIGHT]="R";
 		custom[KEY_UP]="CW";
+		custom[KEY_X]="CW";
 		custom[KEY_Z]="CCW";
 		custom[KEY_A]="F";
 		custom[KEY_DOWN]="SD";

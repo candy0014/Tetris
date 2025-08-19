@@ -378,17 +378,28 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	Interactive::go(mapHeight+2,0);
 	int now=mapHeight,flag=0;
-	for(int i=mapHeight-1;i>=-mapHeightN;i--){
-		now--;
-		while(now+mapHeightN>=1&&tag[now+mapHeightN]) now--,flag=1;
-		now=std::max(now,1-mapHeightN);
-		if(flag==0) continue;
-		for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[now][j]){
-			Interactive::go(i,j);
-			Interactive::setcol(mp[now][j]);
-			Function::put_square(mp[now][j]!=-1&&(!Invisible||mp[now][j]==7));
+	if(AntiGravity){
+		for(int i=mapHeight-1;i>=-mapHeightN;i--) if(tag[i+mapHeightN]){
+			for(int j=0;j<mapWidth;j++){
+				mp[i][j]=-1;
+				Interactive::go(i,j);
+				Function::put_square(0);
+			}
 		}
-		mp[i]=mp[now];
+	}
+	else{
+		for(int i=mapHeight-1;i>=-mapHeightN;i--){
+			now--;
+			while(now+mapHeightN>=1&&tag[now+mapHeightN]) now--,flag=1;
+			now=std::max(now,1-mapHeightN);
+			if(flag==0) continue;
+			for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[now][j]){
+				Interactive::go(i,j);
+				Interactive::setcol(mp[now][j]);
+				Function::put_square(mp[now][j]!=-1&&(!Invisible||mp[now][j]==7));
+			}
+			mp[i]=mp[now];
+		}
 	}
 	if(GarbageModel==3){
 		Garbage::add_garbage(cnt_garbage,mp);
