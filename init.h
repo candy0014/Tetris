@@ -25,8 +25,6 @@ long long score;
 double last_tim,last_tim2,begin_tim;
 int cnt_block,cnt_atk;
 int cnt_line;
-int cnt_backfire;
-double tim_backfire;
 void init(){
 	int lines=std::max(32,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
@@ -39,7 +37,7 @@ void init(){
 	Function::clear();
 	now_hold=-1,board.clear(),combo=b2b=0;
 	cnt_block=cnt_atk=0;
-	cnt_line=0,cnt_backfire=0;
+	cnt_line=0;
 	if(Model!=0) score=0;
 	Garbage::init();
 	if(FSBorYPA) Interactive::setcol(-1);

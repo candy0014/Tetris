@@ -43,6 +43,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
+		if(GarbageModel==1) Garbage::update_buffer();
 		if(Model==2&&timer.get()-Init::begin_tim>BlitzTime){
 			B.put(x,y,type,mp,0);
 			if(!FSBorYPA) Interactive::setcol(-3);
@@ -427,16 +428,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	if(GarbageModel==2) Garbage::add_garbage((int)(atk*GarbageMultiple),mp);
 	if(GarbageModel==1){
-		int tmp=Init::cnt_backfire;
-		if(cnt_clear){
-			if(Init::cnt_backfire>=atk) tmp=Init::cnt_backfire-atk;
-			else tmp=(atk-Init::cnt_backfire)*GarbageMultiple,Init::tim_backfire=timer.get();
-		}
-		else if(timer.get()-Init::tim_backfire>=0.3){
-			tmp=std::max(Init::cnt_backfire-8,0);
-			Garbage::add_garbage(Init::cnt_backfire-tmp,mp);
-		}
-		Garbage::update_backfire(tmp,Init::cnt_backfire);
+		Garbage::offset_buffer(atk,cnt_clear,mp);
 	}
 	Init::cnt_atk+=atk,Init::cnt_block++;
 	int dscore=0;

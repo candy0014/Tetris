@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <linux/input.h>
 #include "keyhelper.h"
-KEYHELPER keyhelper("/dev/input/event3"); // 请按实际情况配置，见 readme
+KEYHELPER keyhelper("/dev/input/event0"); // 请按实际情况配置，见 readme
 #endif
 
 namespace Config{
@@ -29,16 +29,16 @@ int GarbageModel=0;
 //0:无垃圾行；1:backfire；2:unclear（打出的攻击立即以垃圾行返回）；3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
 int CheeseModel=1;
 //1:正常垃圾行；2:单块以 CheeseMessiness 的概率是垃圾；3:棋盘；-x:在 cheese-layer 模式下，初始 x 模式的消垃圾行后不会继续增长
-int HoleNum=1; //在除了 cheese-layer 的 2/3 模式下，垃圾行的洞数
+int HoleNum=1; //在除了 cheese-layer 的 2/3 模式下，垃圾行的洞数；若为负数则洞的位置为一个区间
 int LayerHeight=6; //固定垃圾行层数
 double TimeInterval=3; //垃圾行增加速率
-double CheeseMessiness=0.8; //垃圾行混乱程度（0~1)
+double CheeseMessiness=0.8; //垃圾行混乱程度 / Cheese模式为2时的垃圾块概率（0~1)
 double GarbageMultiple=1; //unclear 攻击倍率
 
 double Speed=0.6; //默认下落速度，单位 秒/行
 double SDF=0; //软降重力倍率，设为 0 即为正无穷
 double DAS=0.1; //自动移动延迟，单位 秒
-double ARR=0.022; //自动重复速率，单位 秒/列
+double ARR=0.01; //自动重复速率，单位 秒/列
 
 int mapWidth=10; //地图宽度
 int mapHeight=20; //地图高度

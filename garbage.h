@@ -4,17 +4,26 @@
 #include <iostream>
 #include <algorithm>
 #include "map.h"
+#include <deque>
 namespace Garbage{
 	std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 	int chessboard_flag;
 	int last_hole[105];
+	struct Buffer{
+		int cnt_backfire;
+		double tim_backfire;
+		int flag_hole;
+	};
+	std::deque<Buffer>buf;
+	int arr_buf[105];
 	void init(){
 		chessboard_flag=0;
 		for(int i=0;i<mapWidth;i++) last_hole[i]=i;
 		std::shuffle(last_hole,last_hole+mapWidth,rd);
+		buf.clear();
 	}
-	void add_garbage(int height,map &mp,int flag_begin=0){
-		if(GarbageModel==3&&CheeseModel<=0&&!flag_begin) return;
+	void add_garbage(int height,map &mp,int op=0){
+		if(GarbageModel==3&&CheeseModel<=0&&!op) return;
 		height=std::min(height,mapHeight+mapHeightN);
 		for(int i=-mapHeightN;i<mapHeight-height;i++){
 			for(int j=0;j<mapWidth;j++) if(mp[i][j]!=mp[i+height][j]){
@@ -24,7 +33,7 @@ namespace Garbage{
 			mp[i]=mp[i+height];
 		}
 		if(GarbageModel==1||GarbageModel==2){
-			std::shuffle(last_hole,last_hole+mapWidth,rd);
+			if(op!=2) std::shuffle(last_hole,last_hole+mapWidth,rd);
 		}
 		if((GarbageModel!=3&&GarbageModel!=4)||std::abs(CheeseModel)==1){
 			for(int i=mapHeight-height;i<mapHeight;i++){
@@ -34,7 +43,16 @@ namespace Garbage{
 					}
 				}
 				for(int j=0;j<mapWidth;j++) mp[i][j]=7;
-				for(int j=0;j<std::min(mapWidth,std::max(1,HoleNum));j++) mp[i][last_hole[j]]=-1;
+				if(HoleNum>=0){
+					for(int j=0;j<std::min(mapWidth,std::max(1,HoleNum));j++) mp[i][last_hole[j]]=-1;
+				}
+				else{
+					for(int j=0;j<mapWidth;j++) if(last_hole[j]+std::min(mapWidth,-HoleNum)<=mapWidth){
+						for(int k=last_hole[j];k<last_hole[j]+std::min(mapWidth,-HoleNum);k++) mp[i][k]=-1;
+						break;
+					}
+				}
+
 				for(int j=0;j<mapWidth;j++){
 					Interactive::go(i,j),Interactive::setcol(mp[i][j]);
 					Function::put_square(mp[i][j]!=-1);
@@ -62,20 +80,45 @@ namespace Garbage{
 			}
 		}
 	}
-	void update_backfire(int x,int &cnt_backfire){
-		if(x>cnt_backfire){
-			for(int i=cnt_backfire+1;i<=x;i++) if(i<=mapHeight+mapHeightN){
-				Interactive::go(mapHeight-i,0,-3),Interactive::setcol(-4);
-				Function::put_square();
-			}
+	void update_buffer(){
+		int _arr_buf[105];memset(_arr_buf,0,sizeof(_arr_buf));
+		int x=0;
+		double now=timer.get();
+		for(auto y:buf){
+			for(int i=x+1;i<=x+y.cnt_backfire&&i<=mapHeight+mapHeightN;i++) _arr_buf[i]=(now-y.tim_backfire>=0.3)+1;
 		}
-		else{
-			for(int i=cnt_backfire;i>x;i--) if(i<=mapHeight+mapHeightN){
-				Interactive::go(mapHeight-i,0,-3);
-				Function::put_square(0);
-			}
+		for(int i=1;i<=mapHeight+mapHeightN;i++) if(arr_buf[i]!=_arr_buf[i]){
+			arr_buf[i]=_arr_buf[i];
+			Interactive::go(mapHeight-i,0,-3);
+			if(arr_buf[i]==1) Interactive::setcol(-5);
+			if(arr_buf[i]==2) Interactive::setcol(-4);
+			Function::put_square(arr_buf[i]!=0);
 		}
-		cnt_backfire=x;
+	}
+	void offset_buffer(int atk,int cnt_clear,map &mp){
+		if(GarbageModel==1){
+			if(cnt_clear){
+				while(buf.size()){
+					if(buf.front().cnt_backfire<=atk) atk-=buf.front().cnt_backfire,buf.pop_front();
+					else{buf.front().cnt_backfire-=atk;break;}
+				}
+				if(!buf.size()&&atk) buf.push_back(Buffer{(int)(atk*GarbageMultiple),timer.get(),0});
+			}
+			else{
+				int tmp=8;
+				while(buf.size()&&timer.get()-buf.front().tim_backfire>=0.3){
+					if(buf.front().cnt_backfire<=tmp){
+						add_garbage(buf.front().cnt_backfire,mp,buf.front().flag_hole*2),tmp-=buf.front().cnt_backfire,buf.pop_front();
+					}
+					else{
+						Buffer g=buf.front();
+						add_garbage(tmp,mp,g.flag_hole*2),buf.pop_front(),buf.push_front(Buffer{g.cnt_backfire-tmp,g.tim_backfire,1});
+						break;
+					}
+				}
+			}
+			update_buffer();
+		}
 	}
 }
 

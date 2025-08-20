@@ -78,7 +78,7 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 	}
-	Init::last_tim=Init::last_tim2=Init::begin_tim=Init::tim_backfire=timer.get();
+	Init::last_tim=Init::last_tim2=Init::begin_tim=timer.get();
 	for(int i=0;i<Bag*7;i++){
 		setvbuf(stdout,NULL,_IOFBF,4096);
 		for(int j=0;j<NextNum;j++){

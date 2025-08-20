@@ -53,8 +53,11 @@ void rgb_set(int wr,int wg,int wb,int br=12,int bg=12,int bb=12){
 	#endif
 }
 void setcol(int type){
+	if(type==-5){
+		rgb_set(157,15,0);
+	}
 	if(type==-4){//red
-		rgb_set(202,70,77);
+		rgb_set(233,22,0);
 	}
 	if(type==-3){//white
 		rgb_set(255,255,255);
