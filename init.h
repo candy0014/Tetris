@@ -58,14 +58,14 @@ void init(){
 	if(OpenHold){
 		for(int i=0;i<=5;i++){
 			if(i>=mapHeight){
-				if(GarbageModel!=1){
+				if(GarbageModel!=1&&GarbageModel!=5){
 					Interactive::gotoxy(i+mapHeightN,Margin-1);
 					if(i!=5) std::cout<<"|";
 					else std::cout<<"+";
 					fflush(stdout);
 				}
 			}
-			Interactive::gotoxy(i+mapHeightN,Margin-12-2*(GarbageModel==1));
+			Interactive::gotoxy(i+mapHeightN,Margin-12-2*(GarbageModel==1||GarbageModel==5));
 			if(i==0) std::cout<<"+---HOLD---";
 			else if(i!=5) std::cout<<"|";
 			else std::cout<<"+----------";

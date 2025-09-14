@@ -83,7 +83,7 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go(x+shape[type][i][0],y+shape[type][i][1]);
-			Function::put_square(op);
+			Function::put_square(op!=0);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::go(mapHeight+2,0);
@@ -100,7 +100,7 @@ struct block{
 		else Interactive::setcol(-1);
 		for(int i=0;i<4;i++){
 			Interactive::go_hold(shape[0][i][0]+dx,shape[0][i][1],ty);
-			Function::put_square(op);
+			Function::put_square(op!=0);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		Interactive::gotoxy(1,1);
@@ -110,7 +110,7 @@ struct block{
 		Interactive::setcol(ty);
 		for(int i=0;i<4;i++){
 			Interactive::go_next(x,shape[0][i][0]+dx,shape[0][i][1],ty);
-			Function::put_square(op);
+			Function::put_square(op!=0);
 		}
 	}
 	bool checks(int &x,int &y,int last_type,int type,map mp,int &rotate_op){
@@ -170,6 +170,7 @@ block get_block(int type){
 	}
 	return res;
 }
+block block_I=get_block(0);
 
 }
 

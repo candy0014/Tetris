@@ -1,11 +1,11 @@
-# Tetris 俄罗斯方块
+# Tetris 现代俄罗斯方块
 
 玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-Bag 和 SRS+ 或 ARS 旋转系统。
 
 支持在 `config.h` 文件中修改部分默认配置，包括：
 - 基本参数（行数列数，下落速度，软降重力倍率 SDF，自动移动延迟 DAS，自动重复速率 ARR，移动重置时间，移动重置重置次数限制，Next 显示个数，是否允许 Hold，全隐，反重力等）
 - 模式：正常；40 Lines；Blitz
-- 垃圾行：无；backfire；unclear（打出的攻击立即以垃圾行返回）；cheese-layer（固定垃圾行层数）；cheese-timer（定时增加垃圾行）
+- 垃圾行：无；backfire；unclear（打出的攻击立即以垃圾行返回）；cheese-layer（固定垃圾行层数）；cheese-timer（定时增加垃圾行）；生存模式（测试版）
 
 ## 运行方法
 

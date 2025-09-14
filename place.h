@@ -7,6 +7,23 @@ namespace Place{
 
 std::mt19937 rnd(time(0));
 int play(map &mp,Block::block B,int flag_h=0){
+	// if(Model==2){
+	// 	if(Init::cnt_line<3) Speed=1;
+	// 	else if(Init::cnt_line<8) Speed=0.643;
+	// 	else if(Init::cnt_line<15) Speed=0.404;
+	// 	else if(Init::cnt_line<24) Speed=0.249;
+	// 	else if(Init::cnt_line<35) Speed=0.15;
+	// 	else if(Init::cnt_line<48) Speed=0.088;
+	// 	else if(Init::cnt_line<63) Speed=0.0505;
+	// 	else if(Init::cnt_line<80) Speed=0.0283;
+	// 	else if(Init::cnt_line<99) Speed=0.0155;
+	// 	else if(Init::cnt_line<120) Speed=0.00827;
+	// 	else if(Init::cnt_line<144) Speed=0.00431;
+	// 	else if(Init::cnt_line<170) Speed=0.00219;
+	// 	else if(Init::cnt_line<198) Speed=0.00108;
+	// 	else if(Init::cnt_line<228) Speed=0.00052;
+	// 	else Speed=0;
+	// }
 	int x=-2,y=(mapWidth-1)/2,type=0;
 	if(!B.check(x,y,type,mp)){
 		if(Invisible){
@@ -43,7 +60,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	int last_op=0;
 	while(1){
-		if(GarbageModel==1) Garbage::update_buffer();
+		if(GarbageModel==1||GarbageModel==5) Garbage::update_buffer();
 		if(Model==2&&timer.get()-Init::begin_tim>BlitzTime){
 			B.put(x,y,type,mp,0);
 			if(!FSBorYPA) Interactive::setcol(-3);
@@ -53,6 +70,12 @@ int play(map &mp,Block::block B,int flag_h=0){
 			return 0;
 		}
 		if(timer.get()-Init::last_tim2>0.1){
+			if(GarbageModel==5){
+				if(rnd()%30==0){
+					int atk=rnd()%4+1;
+					Garbage::add_buffer(atk,mp);
+				}
+			}
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			if(!FSBorYPA) Interactive::setcol(-3);
 			else Interactive::setcol(-1);
@@ -78,8 +101,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 		if(GarbageModel==4&&timer.get()-Init::last_tim>TimeInterval){
 			setvbuf(stdout,NULL,_IOFBF,4096);
 			B.put(x,y,type,mp,0);
-			if(!B.check(x+1,y,type,mp)) x--;
 			Garbage::add_garbage(1,mp);
+			if(!B.check(x,y,type,mp)) x--;
 			B.put(x,y,type,mp);
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim=timer.get();
@@ -427,9 +450,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		atk+=pc_flag*5+b2b_charging;
 	}
 	if(GarbageModel==2) Garbage::add_garbage((int)(atk*GarbageMultiple),mp);
-	if(GarbageModel==1){
-		Garbage::offset_buffer(atk,cnt_clear,mp);
-	}
+	if(GarbageModel==1||GarbageModel==5) Garbage::offset_buffer(atk,cnt_clear,mp);
 	Init::cnt_atk+=atk,Init::cnt_block++;
 	int dscore=0;
 	if(cnt_clear==1) dscore+=100;

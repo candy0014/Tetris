@@ -12,7 +12,7 @@ struct map {
 		line() { memset(rows, 0xff, sizeof(rows)); }
 
 		int &operator[](const int &pos) {
-			assert(0 <= pos && pos < mapWidth);
+			// assert(0 <= pos && pos < mapWidth);
 			return rows[pos];
 		}
 		void clear(){
@@ -23,8 +23,8 @@ struct map {
 	line mapP[105], mapN[105];
 
 	line &operator[](const int &pos) {
-		assert(-mapHeightN <= pos);
-		assert(pos < mapHeight);
+		// assert(-mapHeightN <= pos);
+		// assert(pos < mapHeight);
 		if (pos >= 0) {
 			return mapP[pos];
 		}

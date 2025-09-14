@@ -3,8 +3,9 @@
 #include <random>
 #include <iostream>
 #include <algorithm>
-#include "map.h"
 #include <deque>
+#include "map.h"
+#include "block.h"
 namespace Garbage{
 	std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 	int chessboard_flag;
@@ -32,7 +33,7 @@ namespace Garbage{
 			}
 			mp[i]=mp[i+height];
 		}
-		if(GarbageModel==1||GarbageModel==2){
+		if(GarbageModel==1||GarbageModel==2||GarbageModel==5){
 			if(op!=2) std::shuffle(last_hole,last_hole+mapWidth,rd);
 		}
 		if((GarbageModel!=3&&GarbageModel!=4)||std::abs(CheeseModel)==1){
@@ -52,7 +53,6 @@ namespace Garbage{
 						break;
 					}
 				}
-
 				for(int j=0;j<mapWidth;j++){
 					Interactive::go(i,j),Interactive::setcol(mp[i][j]);
 					Function::put_square(mp[i][j]!=-1);
@@ -85,40 +85,64 @@ namespace Garbage{
 		int x=0;
 		double now=timer.get();
 		for(auto y:buf){
-			for(int i=x+1;i<=x+y.cnt_backfire&&i<=mapHeight+mapHeightN;i++) _arr_buf[i]=(now-y.tim_backfire>=0.3)+1;
+			for(int i=x+1;i<=x+y.cnt_backfire&&i<=mapHeight+mapHeightN;i++){
+				double tmp=now-y.tim_backfire;
+				if(GarbageModel==1){
+					if(tmp<=0.3) _arr_buf[i]=1;
+					else _arr_buf[i]=2;
+				}
+				if(GarbageModel==5){
+					if(tmp<=2.5) _arr_buf[i]=1;
+					else if(tmp<=5) _arr_buf[i]=2;
+					else _arr_buf[i]=3;
+				}
+			}
+			x+=y.cnt_backfire;
 		}
 		for(int i=1;i<=mapHeight+mapHeightN;i++) if(arr_buf[i]!=_arr_buf[i]){
 			arr_buf[i]=_arr_buf[i];
 			Interactive::go(mapHeight-i,0,-3);
-			if(arr_buf[i]==1) Interactive::setcol(-5);
-			if(arr_buf[i]==2) Interactive::setcol(-4);
-			Function::put_square(arr_buf[i]!=0);
+			if(arr_buf[i]==0) Function::put_square(0);
+			if(GarbageModel==1){
+				if(arr_buf[i]==1) Interactive::setcol(-4),Function::put_square(2);
+				if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(1);
+			}
+			if(GarbageModel==5){
+				if(arr_buf[i]==1) Interactive::setcol(-5),Function::put_square(2);
+				if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(2);
+				if(arr_buf[i]==3) Interactive::setcol(-4),Function::put_square(1);
+			}
 		}
 	}
+	void add_buffer(int atk,map &mp){
+		if(atk) buf.push_back(Buffer{(int)(atk*GarbageMultiple),timer.get(),0});
+		update_buffer();
+	}
 	void offset_buffer(int atk,int cnt_clear,map &mp){
-		if(GarbageModel==1){
-			if(cnt_clear){
-				while(buf.size()){
-					if(buf.front().cnt_backfire<=atk) atk-=buf.front().cnt_backfire,buf.pop_front();
-					else{buf.front().cnt_backfire-=atk;break;}
-				}
-				if(!buf.size()&&atk) buf.push_back(Buffer{(int)(atk*GarbageMultiple),timer.get(),0});
+		if(cnt_clear){
+			while(buf.size()){
+				if(buf.front().cnt_backfire<=atk) atk-=buf.front().cnt_backfire,buf.pop_front();
+				else{buf.front().cnt_backfire-=atk;break;}
 			}
-			else{
-				int tmp=8;
-				while(buf.size()&&timer.get()-buf.front().tim_backfire>=0.3){
-					if(buf.front().cnt_backfire<=tmp){
-						add_garbage(buf.front().cnt_backfire,mp,buf.front().flag_hole*2),tmp-=buf.front().cnt_backfire,buf.pop_front();
-					}
-					else{
-						Buffer g=buf.front();
-						add_garbage(tmp,mp,g.flag_hole*2),buf.pop_front(),buf.push_front(Buffer{g.cnt_backfire-tmp,g.tim_backfire,1});
-						break;
-					}
-				}
-			}
-			update_buffer();
+			if(!buf.size()&&atk&&GarbageModel==1) add_buffer(atk,mp);
 		}
+		else{
+			int tmp=8;
+			double tim_lim;
+			if(GarbageModel==1) tim_lim=0.3;
+			if(GarbageModel==5) tim_lim=5;
+			while(buf.size()&&timer.get()-buf.front().tim_backfire>=tim_lim&&tmp){
+				if(buf.front().cnt_backfire<=tmp){
+					add_garbage(buf.front().cnt_backfire,mp,buf.front().flag_hole*2),tmp-=buf.front().cnt_backfire,buf.pop_front();
+				}
+				else{
+					Buffer g=buf.front();
+					add_garbage(tmp,mp,g.flag_hole*2),buf.pop_front(),buf.push_front(Buffer{g.cnt_backfire-tmp,g.tim_backfire,1});
+					break;
+				}
+			}
+		}
+		update_buffer();
 	}
 }
 

@@ -71,6 +71,8 @@ namespace Function{
 			#endif
 			#ifdef __linux__
 			std::cout<<"██";
+			// if(op==1) std::cout<<"██";
+			// if(op==2) std::cout<<"🗖";
 			#endif
 			fflush(stdout);
 		}
