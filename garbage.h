@@ -7,16 +7,17 @@
 #include "map.h"
 #include "block.h"
 namespace Garbage{
+	constexpr int BufferSize=1000;
 	std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 	int chessboard_flag;
-	int last_hole[105];
+	int last_hole[BufferSize];
 	struct Buffer{
 		int cnt_backfire;
 		double tim_backfire;
 		int flag_hole;
 	};
 	std::deque<Buffer>buf;
-	int arr_buf[105];
+	int arr_buf[BufferSize];
 	void init(){
 		chessboard_flag=0;
 		for(int i=0;i<mapWidth;i++) last_hole[i]=i;
@@ -81,11 +82,11 @@ namespace Garbage{
 		}
 	}
 	void update_buffer(){
-		int _arr_buf[105];memset(_arr_buf,0,sizeof(_arr_buf));
+		int _arr_buf[BufferSize];memset(_arr_buf,0,sizeof(_arr_buf));
 		int x=0;
 		double now=timer.get();
 		for(auto y:buf){
-			for(int i=x+1;i<=x+y.cnt_backfire&&i<=mapHeight+mapHeightN;i++){
+			for(int i=x+1;i<=x+y.cnt_backfire&&i<BufferSize;i++){
 				double tmp=now-y.tim_backfire;
 				if(GarbageModel==1){
 					if(tmp<=0.3) _arr_buf[i]=1;
@@ -99,18 +100,20 @@ namespace Garbage{
 			}
 			x+=y.cnt_backfire;
 		}
-		for(int i=1;i<=mapHeight+mapHeightN;i++) if(arr_buf[i]!=_arr_buf[i]){
+		for(int i=1;i<BufferSize;i++) if(arr_buf[i]!=_arr_buf[i]){
 			arr_buf[i]=_arr_buf[i];
-			Interactive::go(mapHeight-i,0,-3);
-			if(arr_buf[i]==0) Function::put_square(0);
-			if(GarbageModel==1){
-				if(arr_buf[i]==1) Interactive::setcol(-4),Function::put_square(2);
-				if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(1);
-			}
-			if(GarbageModel==5){
-				if(arr_buf[i]==1) Interactive::setcol(-5),Function::put_square(2);
-				if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(2);
-				if(arr_buf[i]==3) Interactive::setcol(-4),Function::put_square(1);
+			if(i<=mapHeight+mapHeightN){
+				Interactive::go(mapHeight-i,0,-3);
+				if(arr_buf[i]==0) Function::put_square(0);
+				if(GarbageModel==1){
+					if(arr_buf[i]==1) Interactive::setcol(-4),Function::put_square(2);
+					if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(1);
+				}
+				if(GarbageModel==5){
+					if(arr_buf[i]==1) Interactive::setcol(-5),Function::put_square(2);
+					if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(2);
+					if(arr_buf[i]==3) Interactive::setcol(-4),Function::put_square(1);
+				}
 			}
 		}
 	}

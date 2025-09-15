@@ -48,36 +48,36 @@ namespace Setting{
 	void setting(){
 		Function::clear();
 		cnt_var=0,cnt_lin=0;
-		insert0("Model",&Model);
-		insert0("Racing Distance",&RacingDistance);
-		insert1("Blitz Time",&BlitzTime);
+		insert0("Model",&UserConfig::Model);
+		insert0("Racing Distance",&UserConfig::RacingDistance);
+		insert1("Blitz Time",&UserConfig::BlitzTime);
 		cnt_lin++;
-		insert0("Garbage Model",&GarbageModel);
-		insert0("Cheese Model",&CheeseModel);
-		insert0("Num of Hole",&HoleNum);
-		insert0("Layer Height",&LayerHeight);
-		insert1("Time Interval",&TimeInterval);
-		insert1("Cheese Messiness",&CheeseMessiness);
-		insert1("Garbage Multiple",&GarbageMultiple);
+		insert0("Garbage Model",&UserConfig::GarbageModel);
+		insert0("Cheese Model",&UserConfig::CheeseModel);
+		insert0("Num of Hole",&UserConfig::HoleNum);
+		insert0("Layer Height",&UserConfig::LayerHeight);
+		insert1("Time Interval",&UserConfig::TimeInterval);
+		insert1("Cheese Messiness",&UserConfig::CheeseMessiness);
+		insert1("Garbage Multiple",&UserConfig::GarbageMultiple);
 		cnt_lin++;
-		insert1("Speed",&Speed);
-		insert1("SDF",&SDF);
-		insert1("DAS",&DAS);
-		insert1("ARR",&ARR);
+		insert1("Speed",&UserConfig::Speed);
+		insert1("SDF",&UserConfig::SDF);
+		insert1("DAS",&UserConfig::DAS);
+		insert1("ARR",&UserConfig::ARR);
 		cnt_lin++;
-		insert0("Width",&mapWidth);
-		insert0("Height",&mapHeight);
-		insert0("Num of Next",&NextNum);
-		insert0("Open Hold",&OpenHold);
-		insert0("Invisible",&Invisible);
-		insert0("Anti Gravity",&AntiGravity);
-		insert0("Ghost",&Ghost);
-		insert1("EPLD",&EPLD);
-		insert0("Limit of EPLD",&EPLDLim);
-		insert2("Rotation System",&RotationSystem);
+		insert0("Width",&UserConfig::mapWidth);
+		insert0("Height",&UserConfig::mapHeight);
+		insert0("Num of Next",&UserConfig::NextNum);
+		insert0("Open Hold",&UserConfig::OpenHold);
+		insert0("Invisible",&UserConfig::Invisible);
+		insert0("Anti Gravity",&UserConfig::AntiGravity);
+		insert0("Ghost",&UserConfig::Ghost);
+		insert1("EPLD",&UserConfig::EPLD);
+		insert0("Limit of EPLD",&UserConfig::EPLDLim);
+		insert2("Rotation System",&UserConfig::RotationSystem);
 		cnt_lin++;
-		insert0("Windows Version",&WindowsVersion);
-		insert0("FSBorYPA",&FSBorYPA);
+		insert0("Windows Version",&UserConfig::WindowsVersion);
+		insert0("FSBorYPA",&UserConfig::FSBorYPA);
 		Interactive::setcol(-3);
 		for(int i=0;i<cnt_var;i++) print(i);
 		int now=0;print(0,1);
@@ -118,15 +118,16 @@ namespace Setting{
 								(*var[now].a)=v*flag;
 							}
 							if(var[now].b!=NULL){
-								double v=0,w=1;int flag=0;
+								double v=0,w=1;int flag=0,flagg=1;
 								for(int j=0;j<(int)tmp.length();j++){
 									if('0'<=tmp[j]&&tmp[j]<='9'){
 										if(!flag) v=v*10+tmp[j]-'0';
 										else w/=10,v+=w*(tmp[j]-'0');
 									}
+									if(tmp[j]=='-'&&v==0&&flagg==1&&flag==0) flagg=-1;
 									if(tmp[j]=='.') flag=1;
 								}
-								(*var[now].b)=v;
+								(*var[now].b)=v*flagg;
 							}
 							if(var[now].c!=NULL) (*var[now].c)=tmp;
 						}
@@ -134,6 +135,8 @@ namespace Setting{
 						Function::cur_hide();
 						vis[i]=-1;
 						if(var[now].name=="FSBorYPA"){
+							FSBorYPA=std::min(1,std::max(0,UserConfig::FSBorYPA));
+							Interactive::setcol(-3);
 							for(int j=0;j<cnt_var;j++) print(j);
 							print(now,1);
 						}

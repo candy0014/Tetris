@@ -25,7 +25,45 @@ long long score;
 double last_tim,last_tim2,begin_tim;
 int cnt_block,cnt_atk;
 int cnt_line;
+int i_to_fit(int u,int l,int r){
+	return std::min(std::max(u,l),r);
+}
+double d_to_fit(double u,double l,double r){
+	return std::min(std::max(u,l),r);
+}
 void init(){
+	Speed=UserConfig::Speed;
+	if(Speed<0) Speed=1e9+5;
+	SDF=d_to_fit(UserConfig::SDF,0,1e18);
+	DAS=d_to_fit(UserConfig::DAS,0,1e18);
+	ARR=d_to_fit(UserConfig::ARR,0,1e18);
+	mapWidth=i_to_fit(UserConfig::mapWidth,4,100);
+	mapHeight=i_to_fit(UserConfig::mapHeight,2,100);
+	NextNum=i_to_fit(UserConfig::NextNum,0,100);
+	OpenHold=i_to_fit(UserConfig::OpenHold,0,1);
+	Invisible=i_to_fit(UserConfig::Invisible,0,1);
+	AntiGravity=i_to_fit(UserConfig::AntiGravity,0,1);
+	Ghost=i_to_fit(UserConfig::Ghost,0,1);
+	EPLD=d_to_fit(UserConfig::EPLD,0,1e18);
+	EPLDLim=i_to_fit(UserConfig::EPLDLim,0,1000000000);
+	RotationSystem=UserConfig::RotationSystem;
+	if(RotationSystem!="ARS") RotationSystem="SRS";
+	WindowsVersion=i_to_fit(UserConfig::WindowsVersion,1,11);
+	FSBorYPA=i_to_fit(UserConfig::FSBorYPA,0,1);
+	flagBlitz=(UserConfig::Model==-2);
+	Model=i_to_fit(std::abs(UserConfig::Model),0,2);
+	RacingDistance=i_to_fit(UserConfig::RacingDistance,1,1000000000);
+	BlitzTime=d_to_fit(UserConfig::BlitzTime,0,1e18);
+	GarbageModel=i_to_fit(UserConfig::GarbageModel,0,5);
+	CheeseModel=i_to_fit(UserConfig::CheeseModel,-3,3);
+	if(CheeseModel==0||(GarbageModel!=3&&GarbageModel!=4)) CheeseModel=1;
+	if(GarbageModel==3) CheeseModel=std::abs(CheeseModel);
+	if(CheeseModel!=2&&CheeseModel!=3) HoleNum=i_to_fit(UserConfig::HoleNum,1,mapWidth-1);
+	LayerHeight=i_to_fit(UserConfig::LayerHeight,0,mapHeight);
+	TimeInterval=d_to_fit(UserConfig::TimeInterval,0,1e18);
+	CheeseMessiness=d_to_fit(UserConfig::CheeseMessiness,0,1);
+	GarbageMultiple=d_to_fit(UserConfig::GarbageMultiple,0,1e18);
+
 	int lines=std::max(32,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
 	std::string _l="",_c="";

@@ -7,23 +7,16 @@ namespace Place{
 
 std::mt19937 rnd(time(0));
 int play(map &mp,Block::block B,int flag_h=0){
-	// if(Model==2){
-	// 	if(Init::cnt_line<3) Speed=1;
-	// 	else if(Init::cnt_line<8) Speed=0.643;
-	// 	else if(Init::cnt_line<15) Speed=0.404;
-	// 	else if(Init::cnt_line<24) Speed=0.249;
-	// 	else if(Init::cnt_line<35) Speed=0.15;
-	// 	else if(Init::cnt_line<48) Speed=0.088;
-	// 	else if(Init::cnt_line<63) Speed=0.0505;
-	// 	else if(Init::cnt_line<80) Speed=0.0283;
-	// 	else if(Init::cnt_line<99) Speed=0.0155;
-	// 	else if(Init::cnt_line<120) Speed=0.00827;
-	// 	else if(Init::cnt_line<144) Speed=0.00431;
-	// 	else if(Init::cnt_line<170) Speed=0.00219;
-	// 	else if(Init::cnt_line<198) Speed=0.00108;
-	// 	else if(Init::cnt_line<228) Speed=0.00052;
-	// 	else Speed=0;
-	// }
+	int BlitzLevel=0;
+	if(Model==2&&!flagBlitz){
+		int tmp=Init::cnt_line;
+		for(int i=1;;i++){
+			if(tmp>i*2+(i+9)/10) tmp-=i*2+(i+9)/10;
+			else{BlitzLevel=i;break;}
+		}
+		double SpeedTable[20]={0,1,0.643,0.404,0.249,0.15,0.088,0.0505,0.0283,0.0155,0.00827,0.00431,0.00219,0.00108,0.00052,0};
+		Speed=SpeedTable[std::min(BlitzLevel,15)];
+	}
 	int x=-2,y=(mapWidth-1)/2,type=0;
 	if(!B.check(x,y,type,mp)){
 		if(Invisible){
@@ -107,7 +100,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 			setvbuf(stdout,NULL,_IONBF,0);
 			Init::last_tim=timer.get();
 		}
-		if(timer.get()-tim>EPLD){
+		if(timer.get()-tim>EPLD&&Speed<=1e9){
 			if(!B.check(x+1,y,type,mp)) break;
 		}
 		if(timer.get()-tim>Speed){
@@ -464,7 +457,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 	if(pc_flag) dscore+=3500;
 	if(b2b_flag==1&&Init::b2b>=2) dscore=dscore*1.5;
 	if(Init::combo) dscore+=50*(Init::combo-1);
-	Init::score+=dscore;
+	if(Model==2&&!flagBlitz) Init::score+=dscore*BlitzLevel;
+	else Init::score+=dscore;
 	Function::print_score(Init::score);
 	Init::cnt_line+=cnt_clear;
 	if(Model==1){
