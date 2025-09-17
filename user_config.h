@@ -31,6 +31,7 @@ int GarbageModel=0;
 //0:无垃圾行；1:backfire；2:unclear（打出的攻击立即以垃圾行返回）；
 //3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
 //5:生存模式（测试版）（目前效果：每 0.1 秒进行一次判定，每次有 1/30 的概率随机加入 1-4 行垃圾行，5 秒后未被抵消的垃圾行进入场地）
+//6:联机模式（测试版）（详见 readme）
 int CheeseModel=1;
 //1:正常垃圾行；2:单块以 CheeseMessiness 的概率是垃圾；3:棋盘；
 //-x:在 cheese-layer 模式下，初始 x 模式的消垃圾行后不会继续增长
