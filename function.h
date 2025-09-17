@@ -91,6 +91,36 @@ namespace Function{
 		Interactive::gotoxy(mapHeight+mapHeightN+1,Margin+mapWidth-(dig+1)/2);
 		std::cout<<score;fflush(stdout);
 	}
+	void send(std::string s){
+		sock.send(server_id,3000,s);
+	}
+	std::string receive(){
+		return sock.receive().data;
+	}
+	std::string receive_(){
+		std::string s;
+		while((s=receive())=="fail");
+		return s;
+	}
+	std::string receive_(std::string t){
+		std::string s;
+		while((s=receive())!=t);
+		return s;
+	}
+	void receive_clear(){
+		std::string s;
+		while((s=receive())!="fail");
+	}
+	void shuffle(int a[],int l,int r){
+		for(int i=l;i<r;i++){
+			std::swap(a[i],a[rd()%(i-l+1)+l]);
+		}
+	}
+	void shuffle(short a[],int l,int r){
+		for(int i=l;i<r;i++){
+			std::swap(a[i],a[rd()%(i-l+1)+l]);
+		}
+	}
 }
 
 #endif

@@ -4,6 +4,7 @@
 #include "block.h"
 #include "timer.h"
 #include "garbage.h"
+#include "setting.h"
 
 #include <random>
 #include <chrono>
@@ -18,7 +19,6 @@
 
 namespace Init{
 short bl[Bag*7];
-std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 short now_hold;
 int combo,b2b;
 long long score;
@@ -54,7 +54,7 @@ void init(){
 	Model=i_to_fit(std::abs(UserConfig::Model),0,2);
 	RacingDistance=i_to_fit(UserConfig::RacingDistance,1,1000000000);
 	BlitzTime=d_to_fit(UserConfig::BlitzTime,0,1e18);
-	GarbageModel=i_to_fit(UserConfig::GarbageModel,0,5);
+	GarbageModel=i_to_fit(UserConfig::GarbageModel,0,6);
 	CheeseModel=i_to_fit(UserConfig::CheeseModel,-3,3);
 	if(CheeseModel==0||(GarbageModel!=3&&GarbageModel!=4)) CheeseModel=1;
 	if(GarbageModel==3) CheeseModel=std::abs(CheeseModel);
@@ -63,6 +63,37 @@ void init(){
 	TimeInterval=d_to_fit(UserConfig::TimeInterval,0,1e18);
 	CheeseMessiness=d_to_fit(UserConfig::CheeseMessiness,0,1);
 	GarbageMultiple=d_to_fit(UserConfig::GarbageMultiple,0,1e18);
+	if(GarbageModel==6) Model=0;
+
+	if(GarbageModel==6){
+		Function::clear();
+		Interactive::gotoxy(1,1);
+		if(FSBorYPA) Interactive::setcol(-1);
+		else Interactive::setcol(-3);
+		std::cout<<"Waiting for another player...";fflush(stdout);
+		std::string s;
+		int fl=0;
+		for(auto x:KEY){
+			if(custom[x]=="SET"&&Interactive::keydown(x)){fl=-1;break;}
+		}
+		while((s=Function::receive())!="start1"){
+			for(auto x:KEY){
+				if(custom[x]=="SET"){
+					if(!Interactive::keydown(x)) fl=0;
+					if(Interactive::keydown(x)&&fl!=-1){Function::send("end_");Setting::setting();init();return;}
+				}
+			}
+		}
+		Function::send("start2");
+		while((s=Function::receive())!="start3"){
+			for(auto x:KEY){
+				if(custom[x]=="SET"){
+					if(!Interactive::keydown(x)) fl=0;
+					if(Interactive::keydown(x)&&fl!=-1){Function::send("end_");Setting::setting();init();return;}
+				}
+			}
+		}
+	}
 
 	int lines=std::max(32,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
@@ -77,11 +108,18 @@ void init(){
 	cnt_block=cnt_atk=0;
 	cnt_line=0;
 	if(Model!=0) score=0;
-	Garbage::init();
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-3);
 	for(int i=0;i<Bag*7;i++) bl[i]=i%7;
-	for(int i=0;i<Bag;i++) shuffle(bl+i*7,bl+(i+1)*7,rd);
+	if(GarbageModel==6){
+		long long tmp=0;
+		std::string s=Function::receive_();
+		for(int i=0;s[i];i++) tmp=tmp*10+s[i]-'0';
+		rd.seed((unsigned int)tmp);
+		// system("clear");Interactive::setcol(-3);Interactive::gotoxy(1,1);std::cout<<tmp<<" "<<rd()<<"\n";//exit(0);
+	}
+	for(int i=0;i<Bag;i++) Function::shuffle(bl,i*7,(i+1)*7);
+	Garbage::init();
 	setvbuf(stdout,NULL,_IOFBF,4096);
 	for(int i=0;i<=mapHeight;i++){
 		Interactive::gotoxy(i+mapHeightN,Margin-1);
@@ -96,14 +134,14 @@ void init(){
 	if(OpenHold){
 		for(int i=0;i<=5;i++){
 			if(i>=mapHeight){
-				if(GarbageModel!=1&&GarbageModel!=5){
+				if(GarbageModel!=1&&GarbageModel!=5&&GarbageModel!=6){
 					Interactive::gotoxy(i+mapHeightN,Margin-1);
 					if(i!=5) std::cout<<"|";
 					else std::cout<<"+";
 					fflush(stdout);
 				}
 			}
-			Interactive::gotoxy(i+mapHeightN,Margin-12-2*(GarbageModel==1||GarbageModel==5));
+			Interactive::gotoxy(i+mapHeightN,Margin-12-2*(GarbageModel==1||GarbageModel==5||GarbageModel==6));
 			if(i==0) std::cout<<"+---HOLD---";
 			else if(i!=5) std::cout<<"|";
 			else std::cout<<"+----------";

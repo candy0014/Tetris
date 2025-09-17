@@ -7,10 +7,9 @@
 #include "map.h"
 #include "block.h"
 namespace Garbage{
-	constexpr int BufferSize=1000;
-	std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
+	constexpr int BufferSize=100;
 	int chessboard_flag;
-	int last_hole[BufferSize];
+	int last_hole[105];
 	struct Buffer{
 		int cnt_backfire;
 		double tim_backfire;
@@ -21,7 +20,7 @@ namespace Garbage{
 	void init(){
 		chessboard_flag=0;
 		for(int i=0;i<mapWidth;i++) last_hole[i]=i;
-		std::shuffle(last_hole,last_hole+mapWidth,rd);
+		Function::shuffle(last_hole,0,mapWidth);
 		buf.clear();
 	}
 	void add_garbage(int height,map &mp,int op=0){
@@ -34,14 +33,20 @@ namespace Garbage{
 			}
 			mp[i]=mp[i+height];
 		}
-		if(GarbageModel==1||GarbageModel==2||GarbageModel==5){
-			if(op!=2) std::shuffle(last_hole,last_hole+mapWidth,rd);
+		if(GarbageModel==1||GarbageModel==2||GarbageModel==5||GarbageModel==6){
+			if(op!=2) Function::shuffle(last_hole,0,mapWidth);
+			// Function::clear();
+			// Interactive::gotoxy(1,1);
+			// Interactive::setcol(-3);
+			// for(int i=0;i<mapWidth;i++) std::cout<<last_hole[i]<<" ";
+			// fflush(stdout);
+			// exit(0);
 		}
 		if((GarbageModel!=3&&GarbageModel!=4)||std::abs(CheeseModel)==1){
 			for(int i=mapHeight-height;i<mapHeight;i++){
 				if(GarbageModel==3||GarbageModel==4){
 					if(rd()%1000000<1000000*CheeseMessiness){
-						std::shuffle(last_hole,last_hole+mapWidth,rd);
+						Function::shuffle(last_hole,0,mapWidth);
 					}
 				}
 				for(int j=0;j<mapWidth;j++) mp[i][j]=7;
@@ -88,7 +93,7 @@ namespace Garbage{
 		for(auto y:buf){
 			for(int i=x+1;i<=x+y.cnt_backfire&&i<BufferSize;i++){
 				double tmp=now-y.tim_backfire;
-				if(GarbageModel==1){
+				if(GarbageModel==1||GarbageModel==6){
 					if(tmp<=0.3) _arr_buf[i]=1;
 					else _arr_buf[i]=2;
 				}
@@ -105,8 +110,8 @@ namespace Garbage{
 			if(i<=mapHeight+mapHeightN){
 				Interactive::go(mapHeight-i,0,-3);
 				if(arr_buf[i]==0) Function::put_square(0);
-				if(GarbageModel==1){
-					if(arr_buf[i]==1) Interactive::setcol(-4),Function::put_square(2);
+				if(GarbageModel==1||GarbageModel==6){
+					if(arr_buf[i]==1) Interactive::setcol(-5),Function::put_square(2);
 					if(arr_buf[i]==2) Interactive::setcol(-4),Function::put_square(1);
 				}
 				if(GarbageModel==5){
@@ -127,12 +132,15 @@ namespace Garbage{
 				if(buf.front().cnt_backfire<=atk) atk-=buf.front().cnt_backfire,buf.pop_front();
 				else{buf.front().cnt_backfire-=atk;break;}
 			}
-			if(!buf.size()&&atk&&GarbageModel==1) add_buffer(atk,mp);
+			if(!buf.size()&&atk&&(GarbageModel==1||GarbageModel==6)){
+				if(GarbageModel==1) add_buffer(atk,mp);
+				if(GarbageModel==6) Function::send(std::to_string(atk));
+			}
 		}
 		else{
 			int tmp=8;
 			double tim_lim;
-			if(GarbageModel==1) tim_lim=0.3;
+			if(GarbageModel==1||GarbageModel==6) tim_lim=0.3;
 			if(GarbageModel==5) tim_lim=5;
 			while(buf.size()&&timer.get()-buf.front().tim_backfire>=tim_lim&&tmp){
 				if(buf.front().cnt_backfire<=tmp){

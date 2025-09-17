@@ -11,19 +11,21 @@
 
 0. 按电脑配置修改 `user_config.h` 文件；
 	- 键位在编译之后不能改变，请在编译之前修改键位；
+	- 若需联机，服务端地址编译之后不能改变，请在编译之前修改服务端地址；
 	- 若为 Win11 用户，需将 `user_config.h` 中的 `WindowsVersion` 变量修改为 `11`；
 	- 若为 Linux 用户：
 		1. 打开终端，键入 `cat /proc/bus/input/devices`；
 		2. 找到含有 `N: Name=" ... Keyboard ... "` 的段落，记下形如 `H: Handlers=sysrq kbd event[ ] leds` 的那一行中 `[ ]` 对应的数字；
 		3. 将 `user_config.h` 中的 `KEYHELPER keyhelper("/dev/input/event[ ]");` 中的 `[ ]` 替换为刚才的数字； 
-1. 使用集成开发环境或 g++ 等编译器对 `tetr.cpp` 进行编译；
+1. 使用集成开发环境或 g++ 等编译器对 `tetr.cpp`（`server.cpp`）进行编译；
 	- 命令提示符 (cmd) 编译方法：
 		1. 自行下载 C++ 编译器，下以 g++ 为例；
-		2. 打开 cmd，`cd` 到游戏文件夹内，键入 `g++ tetr.cpp -o tetr -std=c++11`；
+		2. 打开 cmd，`cd` 到游戏文件夹内，键入 `g++ tetr.cpp -o tetr -std=c++11 -lws2_32`（如需联机，继续键入 `g++ server.cpp -o server -std=c++11 -lws2_32`）；
 	- Linux 下终端编译方法：
 		1. 自行下载 C++ 编译器，下以 g++ 为例；
-		2. 打开终端 `cd` 到游戏文件夹内，键入 `g++ tetr.cpp -o tetr -std=c++11 -lpthread`；
+		2. 打开终端 `cd` 到游戏文件夹内，键入 `g++ tetr.cpp -o tetr -std=c++11 -lpthread`（如需联机，继续键入 `g++ server.cpp -o server -std=c++11`）；
 2. 运行游戏。
+	- 如需联机，Windows 下运行生成的 `server.exe` 文件，Linux 下打开终端进入游戏文件夹键入 `./server`（运行 `server` 必须先于运行 `tetr`）；
 	- Windows 下：运行生成的 `tetr.exe` 文件。
 	- Linux 下：打开终端 `cd` 到游戏文件夹内，键入 `sudo ./tetr`（或以管理员身份键入 `./tetr`）
 
@@ -48,3 +50,5 @@
 	3. 点击【属性-->字体】，将字体改为黑体。
 	
 - 显示错位：在某些电脑上，调整窗口大小的代码可能不能起效，需手动调节窗口大小。
+
+- 联机失败：一台电脑仅能开一个服务器，服务器需在客户端运行前运行，且仅支持前两个客户端接入，不允许某个客户端退出后再次接入。

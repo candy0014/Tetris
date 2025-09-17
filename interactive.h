@@ -1,10 +1,6 @@
 #ifndef INTERACTIVE_H
 #define INTERACTIVE_H
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include "config.h"
 #include <iostream>
 
@@ -35,7 +31,7 @@ void gotoxy(int x,int y){
 }
 
 void go(int x,int y,int op=0){
-	if((GarbageModel==1||GarbageModel==5)&&y<0) y--;
+	if((GarbageModel==1||GarbageModel==5||GarbageModel==6)&&y<0) y--;
 	gotoxy(x+mapHeightN,y*2+Margin+op);
 }
 void go_hold(int x,int y,int type){

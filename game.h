@@ -10,7 +10,11 @@ namespace Game{
 
 void game(){
 	int flag=0;
-	if(Model==1||Model==2){
+	if(GarbageModel==6){
+		Function::send("start4");
+		Function::receive_("start5");
+	}
+	if(Model==1||Model==2||GarbageModel==6){
 		double tim=timer.get();
 		Interactive::setcol(3);
 		Interactive::go(1,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┏━━━┓";
@@ -24,14 +28,16 @@ void game(){
 			if(custom[x]=="SET"&&Interactive::keydown(x)){fl2=-1;break;}
 		}
 		while(timer.get()-tim<1){
-			for(auto x:KEY){
-				if(custom[x]=="RE"){
-					if(!Interactive::keydown(x)) fl=0;
-					if(Interactive::keydown(x)&&fl!=-1) return;
-				}
-				if(custom[x]=="SET"){
-					if(!Interactive::keydown(x)) fl2=0;
-					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+			if(GarbageModel!=6){
+				for(auto x:KEY){
+					if(custom[x]=="RE"){
+						if(!Interactive::keydown(x)) fl=0;
+						if(Interactive::keydown(x)&&fl!=-1) return;
+					}
+					if(custom[x]=="SET"){
+						if(!Interactive::keydown(x)) fl2=0;
+						if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+					}
 				}
 			}
 		}
@@ -42,14 +48,16 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┃    ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"┗━━━┛";
 		while(timer.get()-tim<1){
-			for(auto x:KEY){
-				if(custom[x]=="RE"){
-					if(!Interactive::keydown(x)) fl=0;
-					if(Interactive::keydown(x)&&fl!=-1) return;
-				}
-				if(custom[x]=="SET"){
-					if(!Interactive::keydown(x)) fl2=0;
-					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+			if(GarbageModel!=6){
+				for(auto x:KEY){
+					if(custom[x]=="RE"){
+						if(!Interactive::keydown(x)) fl=0;
+						if(Interactive::keydown(x)&&fl!=-1) return;
+					}
+					if(custom[x]=="SET"){
+						if(!Interactive::keydown(x)) fl2=0;
+						if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+					}
 				}
 			}
 		}
@@ -60,14 +68,16 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"  ┃  ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"  ┻  ";
 		while(timer.get()-tim<1){
-			for(auto x:KEY){
-				if(custom[x]=="RE"){
-					if(!Interactive::keydown(x)) fl=0;
-					if(Interactive::keydown(x)&&fl!=-1) return;
-				}
-				if(custom[x]=="SET"){
-					if(!Interactive::keydown(x)) fl2=0;
-					if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+			if(GarbageModel!=6){
+				for(auto x:KEY){
+					if(custom[x]=="RE"){
+						if(!Interactive::keydown(x)) fl=0;
+						if(Interactive::keydown(x)&&fl!=-1) return;
+					}
+					if(custom[x]=="SET"){
+						if(!Interactive::keydown(x)) fl2=0;
+						if(Interactive::keydown(x)&&fl2!=-1){Setting::setting();return;}
+					}
 				}
 			}
 		}
@@ -79,6 +89,9 @@ void game(){
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 	}
 	Init::last_tim=Init::last_tim2=Init::begin_tim=timer.get();
+	if(GarbageModel==6){
+		Function::send("start6");
+	}
 	for(int i=0;i<Bag*7;i++){
 		setvbuf(stdout,NULL,_IOFBF,4096);
 		for(int j=0;j<NextNum;j++){
@@ -87,8 +100,18 @@ void game(){
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!OpenHold));
-		if(res==2) return;
+		if(res==2){
+			if(GarbageModel==6){
+				Function::receive_clear();
+				Function::send("end");
+			}
+			return;
+		}
 		if(res==3){
+			if(GarbageModel==6){
+				Function::receive_clear();
+				Function::send("end");
+			}
 			Setting::setting();
 			return;
 		}
@@ -102,6 +125,10 @@ void game(){
 		}
 		if(Model==1&&Init::cnt_line>=RacingDistance) break;
 		if(Model==2&&timer.get()-Init::begin_tim>BlitzTime) break;
+	}
+	if(GarbageModel==6){
+		Function::receive_clear();
+		Function::send("end");
 	}
 	if(Model==1||Model==2){
 		if(Model==1){
