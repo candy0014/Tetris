@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <linux/input.h>
 #include "keyhelper.h"
-KEYHELPER keyhelper("/dev/input/event0"); // 请按实际情况配置，见 readme
+KEYHELPER keyhelper("/dev/input/event4"); // 请按实际情况配置，见 readme
 #endif
 
 namespace UserConfig{
@@ -58,7 +58,7 @@ int EPLDLim=15; //移动重置重置次数限制
 std::string RotationSystem="SRS"; //旋转系统可选 SRS/ARS
 
 int WindowsVersion=10; //Windows版本
-int FSBorYPA=0; //开起来试试？（防教练用
+int FSBorYPA=1; //开起来试试？（防教练用
 
 std::string server_id=""; //联机的服务端地址，若不联机则随意（需编译前配置）
 

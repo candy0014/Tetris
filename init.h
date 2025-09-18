@@ -57,8 +57,7 @@ void init(){
 	GarbageModel=i_to_fit(UserConfig::GarbageModel,0,6);
 	CheeseModel=i_to_fit(UserConfig::CheeseModel,-3,3);
 	if(CheeseModel==0||(GarbageModel!=3&&GarbageModel!=4)) CheeseModel=1;
-	if(GarbageModel==3) CheeseModel=std::abs(CheeseModel);
-	if(CheeseModel!=2&&CheeseModel!=3) HoleNum=i_to_fit(UserConfig::HoleNum,1,mapWidth-1);
+	if(std::abs(CheeseModel)!=2&&std::abs(CheeseModel)!=3) HoleNum=i_to_fit(UserConfig::HoleNum,1,mapWidth-1);
 	LayerHeight=i_to_fit(UserConfig::LayerHeight,0,mapHeight);
 	TimeInterval=d_to_fit(UserConfig::TimeInterval,0,1e18);
 	CheeseMessiness=d_to_fit(UserConfig::CheeseMessiness,0,1);
