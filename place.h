@@ -64,8 +64,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		if(timer.get()-Init::last_tim2>0.1){
 			if(GarbageModel==5){
-				if(rd()%24==0){
-					int atk=rd()%4+1;
+				if(rd()%1800<SurvivalAPM){
+					int atk=rd()%5+1;
 					Garbage::add_buffer(atk,mp);
 				}
 			}

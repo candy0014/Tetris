@@ -57,12 +57,15 @@ void init(){
 	GarbageModel=i_to_fit(UserConfig::GarbageModel,0,6);
 	CheeseModel=i_to_fit(UserConfig::CheeseModel,-3,3);
 	if(CheeseModel==0||(GarbageModel!=3&&GarbageModel!=4)) CheeseModel=1;
-	if(std::abs(CheeseModel)!=2&&std::abs(CheeseModel)!=3) HoleNum=i_to_fit(UserConfig::HoleNum,1,mapWidth-1);
+	if(std::abs(CheeseModel)!=2&&std::abs(CheeseModel)!=3) HoleNum=i_to_fit(UserConfig::HoleNum,-mapWidth+1,mapWidth-1);
+	else HoleNum=1;
+	if(!HoleNum) HoleNum=1;
 	LayerHeight=i_to_fit(UserConfig::LayerHeight,0,mapHeight);
 	TimeInterval=d_to_fit(UserConfig::TimeInterval,0,1e18);
 	CheeseMessiness=d_to_fit(UserConfig::CheeseMessiness,0,1);
 	GarbageMultiple=d_to_fit(UserConfig::GarbageMultiple,0,1e18);
 	if(GarbageModel==6) Model=0;
+	SurvivalAPM=d_to_fit(UserConfig::SurvivalAPM,0,1800);
 
 	if(GarbageModel==6){
 		Function::clear();
@@ -94,7 +97,7 @@ void init(){
 		}
 	}
 
-	int lines=std::max(32,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
+	int lines=std::max(33,mapHeight+mapHeightN+3),cols=std::max(100,Margin*2+mapWidth*2);
 	#ifdef _WIN32
 	std::string _l="",_c="";
 	while(lines) _l=char(lines%10+'0')+_l,lines/=10;

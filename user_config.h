@@ -30,7 +30,7 @@ double BlitzTime=120; //闪电战时间，单位 秒
 int GarbageModel=0;
 //0:无垃圾行；1:backfire；2:unclear（打出的攻击立即以垃圾行返回）；
 //3:cheese-layer（固定垃圾行层数）；4:cheese-timer（定时增加垃圾行）
-//5:生存模式（测试版）（目前效果：每 0.1 秒进行一次判定，每次有 1/30 的概率随机加入 1-4 行垃圾行，5 秒后未被抵消的垃圾行进入场地）
+//5:生存模式（测试版）（目前效果：每 0.1 秒进行一次判定，每次以基于 APM 的概率随机加入 1~5 行垃圾行，5 秒后未被抵消的垃圾行进入场地）
 //6:联机模式（测试版）（详见 readme）
 int CheeseModel=1;
 //1:正常垃圾行；2:单块以 CheeseMessiness 的概率是垃圾；3:棋盘；
@@ -39,7 +39,8 @@ int HoleNum=1; //在除了 cheese-layer 的 2/3 模式下，垃圾行的洞数�
 int LayerHeight=6; //固定垃圾行层数
 double TimeInterval=3; //垃圾行增加速率
 double CheeseMessiness=0.8; //垃圾行混乱程度 / Cheese模式为2时的垃圾块概率（0~1)
-double GarbageMultiple=1; //unclear 攻击倍率
+double GarbageMultiple=1; //unclear/backfire 攻击倍率
+double SurvivalAPM=60; //生存模式的 APM
 
 double Speed=0.6; //默认下落速度，单位 秒/行（若为负数则无重力）
 double SDF=0; //软降重力倍率，设为 0 即为正无穷
@@ -58,7 +59,7 @@ int EPLDLim=15; //移动重置重置次数限制
 std::string RotationSystem="SRS"; //旋转系统可选 SRS/ARS
 
 int WindowsVersion=10; //Windows版本
-int FSBorYPA=0; //开起来试试？（防教练用
+int FSBorYPA=1; //开起来试试？（防教练用
 
 std::string server_id=""; //联机的服务端地址，若不联机则随意（需编译前配置）
 

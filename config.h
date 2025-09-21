@@ -30,6 +30,7 @@ int LayerHeight;
 double TimeInterval;
 double CheeseMessiness;
 double GarbageMultiple;
+double SurvivalAPM;
 
 double Speed;
 double SDF;

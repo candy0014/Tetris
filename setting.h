@@ -59,6 +59,7 @@ namespace Setting{
 		insert1("Time Interval",&UserConfig::TimeInterval);
 		insert1("Cheese Messiness",&UserConfig::CheeseMessiness);
 		insert1("Garbage Multiple",&UserConfig::GarbageMultiple);
+		insert1("APM for Survival",&UserConfig::SurvivalAPM);
 		cnt_lin++;
 		insert1("Speed",&UserConfig::Speed);
 		insert1("SDF",&UserConfig::SDF);
