@@ -163,8 +163,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 					if(mak==i){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+2)%4,mp,rotate_op)){
-							type=(type+2)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
+							type=(type+2)%4,cnt_op+=flag,last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 						}
 					}
 				}
@@ -176,8 +176,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 					if(mak==i){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+3)%4,mp,rotate_op)){
-							type=(type+3)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
+							type=(type+3)%4,cnt_op+=flag,last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 						}
 					}
 				}
@@ -189,8 +189,8 @@ int play(map &mp,Block::block B,int flag_h=0){
 					if(mak==i){
 						int flag=!B.check(x+1,y,type,mp),rotate_op;
 						if(B.checks(x,y,type,(type+1)%4,mp,rotate_op)){
-							type=(type+1)%4,cnt_op+=flag;
-							if(flag&&cnt_op<=EPLDLim) tim=timer.get(),last_op=rotate_op+1;
+							type=(type+1)%4,cnt_op+=flag,last_op=rotate_op+1;
+							if(flag&&cnt_op<=EPLDLim) tim=timer.get();
 						}
 					}
 				}
@@ -492,3 +492,4 @@ int play(map &mp,Block::block B,int flag_h=0){
 }
 
 #endif
+
