@@ -18,6 +18,9 @@
 
 namespace Config{
 
+int Autoplay;
+double Autoplay_PPS;
+
 int Model;
 int flagBlitz;
 int RacingDistance;
@@ -51,7 +54,6 @@ std::string RotationSystem;
 int WindowsVersion;
 int FSBorYPA;
 
-constexpr int Bag=100000;
 constexpr int Margin=30;
 constexpr int mapHeightN = 8;
 std::map<char,std::string>custom;

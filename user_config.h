@@ -9,6 +9,8 @@
 #include <windows.h>
 #define KEY_UP VK_UP
 #define KEY_DOWN VK_DOWN
+#define KEY_LEFT VK_LEFT
+#define KEK_RIGHT VK_RIGHT
 #define KEY_ENTER VK_RETURN
 #endif
 #ifdef __linux__
@@ -22,6 +24,8 @@ KEYHELPER keyhelper("/dev/input/event4"); // 请按实际情况配置，见 read
 namespace UserConfig{
 
 // =========================================下为配置部分=========================================
+int Autoplay=0;
+double Autoplay_PPS=2.5;
 
 int Model=0; //0:ZEN；1:40-lines；2:Blitz；-2:Blitz（固定为自定速度不变，无得分倍率）
 int RacingDistance=40; //竞速行数
@@ -61,7 +65,7 @@ std::string RotationSystem="SRS"; //旋转系统可选 SRS/ARS
 int WindowsVersion=10; //Windows版本
 int FSBorYPA=0; //开起来试试？（防教练用
 
-std::string server_id=""; //联机的服务端地址，若不联机则随意（需编译前配置）
+std::string server_id="10.49.27.16"; //联机的服务端地址，若不联机则随意（需编译前配置）
 
 std::map<char,std::string>custom;
 
@@ -106,6 +110,7 @@ struct Temp{
 		custom[KEY_C]="H";
 		custom[KEY_R]="RE";
 		custom[KEY_P]="SET";
+		custom[KEY_LEFTSHIFT]="H";
 		#endif
 	}
 };

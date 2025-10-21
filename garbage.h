@@ -35,12 +35,6 @@ namespace Garbage{
 		}
 		if(GarbageModel==1||GarbageModel==2||GarbageModel==5||GarbageModel==6){
 			if(op!=2) Function::shuffle(last_hole,0,mapWidth);
-			// Function::clear();
-			// Interactive::gotoxy(1,1);
-			// Interactive::setcol(-3);
-			// for(int i=0;i<mapWidth;i++) std::cout<<last_hole[i]<<" ";
-			// fflush(stdout);
-			// exit(0);
 		}
 		if((GarbageModel!=3&&GarbageModel!=4)||std::abs(CheeseModel)==1){
 			for(int i=mapHeight-height;i<mapHeight;i++){
@@ -101,6 +95,7 @@ namespace Garbage{
 					if(tmp<=2.5) _arr_buf[i]=1;
 					else if(tmp<=5) _arr_buf[i]=2;
 					else _arr_buf[i]=3;
+					_arr_buf[i]=3;
 				}
 			}
 			x+=y.cnt_backfire;

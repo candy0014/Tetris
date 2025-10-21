@@ -17,7 +17,7 @@ public:
 	KEYHELPER(const char* device_path = "/dev/input/event0") 
 		: fd(-1), running(false) {
 		fd = open(device_path, O_RDONLY | O_NONBLOCK);
-		unsigned long keybits[KEY_MAX/8/sizeof(unsigned long)] = {0};
+		unsigned long keybits[KEY_MAX/8/sizeof(unsigned long)+1] = {0};
 		for (int i = 0; i < KEY_MAX; i++) {
 			if (test_bit(i, keybits)) {
 				key_states[i] = 0;

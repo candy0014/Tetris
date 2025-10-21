@@ -170,7 +170,6 @@ block get_block(int type){
 	}
 	return res;
 }
-block block_I=get_block(0);
 
 }
 

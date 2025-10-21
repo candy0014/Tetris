@@ -2,9 +2,11 @@
 #define PLACE_H
 
 #include "init.h"
+#include "bot.h"
+#include <map>
+#include <queue>
 
 namespace Place{
-
 int play(map &mp,Block::block B,int flag_h=0){
 	int BlitzLevel=0;
 	if(Model==2&&!flagBlitz){
@@ -121,8 +123,23 @@ int play(map &mp,Block::block B,int flag_h=0){
 		}
 		int last_x=x,last_y=y,last_type=type;
 		bool flag_hd=0;
+		if(Autoplay){
+			if(flag_h||fabs(Autoplay_PPS)<1e-8||timer.get()-Init::last_tim3>1.0/Autoplay_PPS){
+				Init::last_tim3=timer.get();
+				int flag_hold=Bot::getpos(mp,Init::next_block,x,y,type,flag_h?-2:Init::now_hold,x,y,type,last_op);
+				if(flag_hold){
+					B.put(last_x,last_y,last_type,mp,0);
+					if(Init::now_hold!=-1) Block::get_block(Init::now_hold).put_hold(0),B.put_hold(-1);
+					return 1;
+				}
+				flag_hd=1;
+			}
+		}
 		for(auto ii:KEY){
 			int i=(int)ii;
+			if(Autoplay){
+				if(custom[i]!="RE"&&custom[i]!="SET") continue;
+			}
 			int tmp=Interactive::keydown(i);
 			if(vis[i]==-1){
 				if(!tmp) vis[i]=0;

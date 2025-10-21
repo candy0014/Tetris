@@ -14,6 +14,8 @@ void game(){
 		Function::send("start4");
 		Function::receive_("start5");
 	}
+	if(1){
+		
 	if(Model==1||Model==2||GarbageModel==6){
 		double tim=timer.get();
 		Interactive::setcol(3);
@@ -88,15 +90,23 @@ void game(){
 		Interactive::go(4,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 		Interactive::go(5,mapWidth/2,-(mapWidth%2==0)-2),std::cout<<"     ";
 	}
-	Init::last_tim=Init::last_tim2=Init::begin_tim=timer.get();
+	}
+	Init::last_tim=Init::last_tim2=Init::begin_tim=Init::last_tim3=timer.get();
 	if(GarbageModel==6){
 		Function::send("start6");
 	}
-	for(int i=0;i<Bag*7;i++){
+	for(int i=0;;i=(i+1)%105){
+		if(i%7==0){
+			for(int j=(i+98)%105,k=0;k<7;j++,k++) Init::bl[j]=k;
+			Function::shuffle(Init::bl,(i+98)%105,(i+98)%105+7);
+		}
 		setvbuf(stdout,NULL,_IOFBF,4096);
+		Init::next_block.clear();
+		Init::next_block.emplace_back(Init::bl[i]);
 		for(int j=0;j<NextNum;j++){
-			Block::get_block(Init::bl[i+j]).put_next(j,0);
-			Block::get_block(Init::bl[i+j+1]).put_next(j);
+			Block::get_block(Init::bl[(i+j)%105]).put_next(j,0);
+			Block::get_block(Init::bl[(i+j+1)%105]).put_next(j);
+			Init::next_block.emplace_back(Init::bl[(i+j+1)%105]);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!OpenHold));
@@ -105,6 +115,7 @@ void game(){
 				Function::receive_clear();
 				Function::send("end");
 			}
+			// exit(0);
 			return;
 		}
 		if(res==3){
