@@ -60,7 +60,7 @@ std::map<char,std::string>custom;
 std::vector<char> KEY;
 
 Socket::UDP sock;
-std::string server_id="10.49.27.16";
+std::string server_id="";
 
 std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 
