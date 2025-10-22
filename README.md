@@ -1,6 +1,6 @@
 # Tetris 现代俄罗斯方块
 
-玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-Bag 和 SRS+ 或 ARS 旋转系统。
+玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-Bag 和 SRS+ 或 SRS 或 ARS 旋转系统。
 
 支持在 `user_config.h` 文件中修改部分默认配置，包括：
 - 基本参数（行数列数，下落速度，软降重力倍率 SDF，自动移动延迟 DAS，自动重复速率 ARR，移动重置时间，移动重置重置次数限制，Next 显示个数，是否允许 Hold，全隐，反重力等）

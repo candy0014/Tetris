@@ -29,7 +29,7 @@ namespace SRS{
 	{0,0,1,0,1,2,1,1,0,2,0,1},
 	{0,0,-1,0,-1,2,-1,1,0,2,0,1}
 	};
-	int chkI[12][6][2]={
+	int chkI_[12][6][2]={
 	{0,0,1,0,-2,0,-2,-1,1,2,0,0},
 	{0,0,-1,0,2,0,-1,-2,2,1,0,0},
 	{0,0,-1,0,2,0,-1,2,2,-1,0,0},
@@ -38,6 +38,20 @@ namespace SRS{
 	{0,0,1,0,-2,0,1,2,-2,-1,0,0},
 	{0,0,1,0,-2,0,2,-1,-2,1,0,0},
 	{0,0,-1,0,2,0,2,-1,-1,2,0,0},
+	{0,0,0,1,1,1,-1,1,1,0,-1,0},
+	{0,0,0,-1,-1,-1,1,-1,-1,0,1,0},
+	{0,0,1,0,1,2,1,1,0,2,0,1},
+	{0,0,-1,0,-1,2,-1,1,0,2,0,1}
+	};
+	int chkI[12][6][2]={
+	{0,0,-2,0,1,0,-2,-1,1,2,0,0},
+	{0,0,2,0,-1,0,2,1,-1,-2,0,0},
+	{0,0,-1,0,2,0,-1,2,2,-1,0,0},
+	{0,0,1,0,-2,0,1,-2,-2,1,0,0},
+	{0,0,2,0,-1,0,2,1,-1,-2,0,0},
+	{0,0,-2,0,1,0,-2,-1,1,2,0,0},
+	{0,0,1,0,-2,0,1,-2,-2,1,0,0},
+	{0,0,-1,0,2,0,-1,2,2,-1,0,0},
 	{0,0,0,1,1,1,-1,1,1,0,-1,0},
 	{0,0,0,-1,-1,-1,1,-1,-1,0,1,0},
 	{0,0,1,0,1,2,1,1,0,2,0,1},
@@ -144,7 +158,7 @@ struct block{
 };
 block get_block(int type){
 	block res;
-	if(RotationSystem=="SRS"){
+	if(RotationSystem=="SRS"||RotationSystem=="SRS+"){
 		if(type==0) memcpy(res.shape,SRS::I,sizeof(SRS::I));
 		if(type==1) memcpy(res.shape,SRS::J,sizeof(SRS::J));
 		if(type==2) memcpy(res.shape,SRS::L,sizeof(SRS::L));
@@ -152,7 +166,10 @@ block get_block(int type){
 		if(type==4) memcpy(res.shape,SRS::S,sizeof(SRS::S));
 		if(type==5) memcpy(res.shape,SRS::T,sizeof(SRS::T));
 		if(type==6) memcpy(res.shape,SRS::Z,sizeof(SRS::Z));
-		if(type==0) memcpy(res.chk,SRS::chkI,sizeof(SRS::chkI));
+		if(type==0){
+			if(RotationSystem=="SRS+") memcpy(res.chk,SRS::chkI_,sizeof(SRS::chkI_));
+			else memcpy(res.chk,SRS::chkI,sizeof(SRS::chkI));
+		}
 		else memcpy(res.chk,SRS::chks,sizeof(SRS::chks));
 		res.ty=type,res.dx=0;
 	}

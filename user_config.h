@@ -24,8 +24,6 @@ KEYHELPER keyhelper("/dev/input/event4"); // 请按实际情况配置，见 read
 namespace UserConfig{
 
 // =========================================下为配置部分=========================================
-int Autoplay=0;
-double Autoplay_PPS=2.5;
 
 int Model=0; //0:ZEN；1:40-lines；2:Blitz；-2:Blitz（固定为自定速度不变，无得分倍率）
 int RacingDistance=40; //竞速行数
@@ -60,7 +58,10 @@ int AntiGravity=0; //启用反重力
 int Ghost=1; //阴影块（方块落点）
 double EPLD=0.5; //锁定延迟（移动重置）
 int EPLDLim=15; //移动重置重置次数限制
-std::string RotationSystem="SRS"; //旋转系统可选 SRS/ARS
+std::string RotationSystem="SRS+"; //旋转系统可选 SRS+/SRS/ARS
+
+int Autoplay=0; //是否开启 Autoplay
+double Autoplay_PPS=2.5; //Autoplay 的 PPS
 
 int WindowsVersion=10; //Windows版本
 int FSBorYPA=0; //开起来试试？（防教练用

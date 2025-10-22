@@ -49,7 +49,7 @@ void init(){
 	EPLD=d_to_fit(UserConfig::EPLD,0,1e18);
 	EPLDLim=i_to_fit(UserConfig::EPLDLim,0,1000000000);
 	RotationSystem=UserConfig::RotationSystem;
-	if(RotationSystem!="ARS") RotationSystem="SRS";
+	if(RotationSystem!="ARS"&&RotationSystem!="SRS") RotationSystem="SRS+";
 	WindowsVersion=i_to_fit(UserConfig::WindowsVersion,1,11);
 	FSBorYPA=i_to_fit(UserConfig::FSBorYPA,0,1);
 	flagBlitz=(UserConfig::Model==-2);

@@ -78,7 +78,7 @@ void setcol(int type){
 		rgb_set(193,168,65);
 		return;
 	}
-	if(RotationSystem=="SRS"){
+	if(RotationSystem=="SRS"||RotationSystem=="SRS+"){
 		if(type==0) rgb_set(54,235,168);
 		if(type==1) rgb_set(95,78,179);
 		if(type==2) rgb_set(197,117,68);
