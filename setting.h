@@ -53,7 +53,7 @@ namespace Setting{
 	}
 	void print_page(){
 		Function::clear();
-		if(!FSBorYPA) Interactive::setcol(-4);
+		if(!FSBorYPA) Interactive::setcol(-6);
 		else Interactive::setcol(-1);
 		Interactive::gotoxy(2,4);
 		std::cout<<title[now_pag];

@@ -58,6 +58,10 @@ void setcol(int type){
 		else rgb_set(0,0,0);
 		return;
 	}
+	if(type==-6){ //orange
+		rgb_set(237,109,0);
+		return;
+	}
 	if(type==-5){
 		rgb_set(157,15,0);
 		return;
