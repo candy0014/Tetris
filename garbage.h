@@ -95,7 +95,6 @@ namespace Garbage{
 					if(tmp<=2.5) _arr_buf[i]=1;
 					else if(tmp<=5) _arr_buf[i]=2;
 					else _arr_buf[i]=3;
-					_arr_buf[i]=3;
 				}
 			}
 			x+=y.cnt_backfire;
