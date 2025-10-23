@@ -351,7 +351,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 		if(RotationSystem=="ARS") dx=1;
 		for(int i=0;i<4;i++) if(x+_dir[i][0]+dx>=mapHeight||y+_dir[i][1]<0||y+_dir[i][1]>=mapWidth||mp[x+_dir[i][0]+dx][y+_dir[i][1]]!=-1){
 			cnt1++;
-			if(RotationSystem=="SRS"){
+			if(RotationSystem=="SRS"||RotationSystem=="SRS+"){
 				if(i==type||i==(type+1)%4) cnt2++;
 			}
 			if(RotationSystem=="ARS"){

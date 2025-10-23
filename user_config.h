@@ -61,7 +61,7 @@ double Autoplay_PPS=2.5; //Autoplay 的 PPS
 int WindowsVersion=10; //Windows版本
 int FSBorYPA=0; //开起来试试？（防教练用
 
-std::string server_id=""; //联机的服务端地址，若不联机则随意（需编译前配置）
+std::string server_id="10.49.27.16"; //联机的服务端地址，若不联机则随意（需编译前配置）
 
 std::map<char,std::string>custom;
 
