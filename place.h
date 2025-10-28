@@ -125,8 +125,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 		bool flag_hd=0;
 		if(Autoplay){
 			if(flag_h||fabs(Autoplay_PPS)<1e-8||timer.get()-Init::last_tim3>1.0/Autoplay_PPS){
-				Init::last_tim3=timer.get();
-				int flag_hold=Bot::getpos(mp,Init::next_block,x,y,type,flag_h?-2:Init::now_hold,x,y,type,last_op);
+				if(!flag_h) Init::last_tim3=timer.get();
+				int flag_hold=Bot::getpos(mp,Init::next_block,x,y,type,(flag_h||!OpenHold)?-2:Init::now_hold,x,y,type,last_op,Init::flag_first);
+				Init::flag_first=0;
 				if(flag_hold){
 					B.put(last_x,last_y,last_type,mp,0);
 					if(Init::now_hold!=-1) Block::get_block(Init::now_hold).put_hold(0),B.put_hold(-1);
@@ -166,7 +167,7 @@ int play(map &mp,Block::block B,int flag_h=0){
 			else if(!vis[i]&&tmp){
 				t[i]=timer.get(),vis[i]=1;
 				if(custom[i]=="H"){
-					if(flag_h) continue;
+					if(flag_h||!OpenHold) continue;
 					B.put(last_x,last_y,last_type,mp,0);
 					if(Init::now_hold!=-1) Block::get_block(Init::now_hold).put_hold(0);
 					B.put_hold(-1);

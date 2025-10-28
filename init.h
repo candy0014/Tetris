@@ -26,6 +26,7 @@ long long score;
 double last_tim,last_tim2,begin_tim,last_tim3;
 int cnt_block,cnt_atk;
 int cnt_line;
+int flag_first;
 std::vector<int>next_block;
 int i_to_fit(int u,int l,int r){
 	return std::min(std::max(u,l),r);

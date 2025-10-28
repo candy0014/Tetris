@@ -137,15 +137,24 @@ void bfs(map &mp,Block::block B,int sx,int sy,int stype){
 		}
 	}
 }
-bool getpos(map mp,std::vector<int>nex,int sx,int sy,int stype,int hold,int &ans_x,int &ans_y,int &ans_type,int &ans_rot){
+int flag_hold=0;
+bool getpos(map mp,std::vector<int>nex,int sx,int sy,int stype,int hold,int &ans_x,int &ans_y,int &ans_type,int &ans_rot,int flag_first=0){
+	if(flag_first) flag_hold=0;
+	if(flag_hold){
+		ans_x=ansx,ans_y=ansy,ans_type=anstype,flag_hold=0;
+		return 0;
+	}
 	bfs(mp,Block::get_block(nex[0]),sx,sy,stype);
-	ans_x=ansx,ans_y=ansy,ans_type=anstype;
+	ans_x=ansx,ans_y=ansy,ans_type=anstype,flag_hold=0;
 	double tmp=ansscore;
 	if(hold!=-2){
 		if(hold==-1) return 1;
 		if(Block::get_block(hold).check(sx,sy,stype,mp)){
 			bfs(mp,Block::get_block(hold),sx,sy,0);
-			if(ansscore>tmp) return 1;
+			if(ansscore>tmp){
+				flag_hold=1;
+				return 1;
+			}
 		}
 	}
 	return 0;

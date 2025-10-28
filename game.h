@@ -92,6 +92,7 @@ void game(){
 	}
 	}
 	Init::last_tim=Init::last_tim2=Init::begin_tim=Init::last_tim3=timer.get();
+	Init::flag_first=0;
 	if(GarbageModel==6){
 		Function::send("start6");
 	}
@@ -109,7 +110,7 @@ void game(){
 			Init::next_block.emplace_back(Init::bl[(i+j+1)%105]);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
-		int res=Place::play(board,Block::get_block(Init::bl[i]),flag|(!OpenHold));
+		int res=Place::play(board,Block::get_block(Init::bl[i]),flag);
 		if(res==2){
 			if(GarbageModel==6){
 				Function::receive_clear();
