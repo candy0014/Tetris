@@ -1,6 +1,6 @@
 # Tetris 现代俄罗斯方块
 
-玩法大致参考 [tetr.io](https://tetr.io/) 中 ZEN 模式下的规则，方块下落速度恒定，使用 7-Bag 和 SRS+ 或 SRS 或 ARS 旋转系统。
+玩法大致参考 [tetr.io](https://tetr.io/) 的规则，使用 7-Bag 和 SRS+ 或 SRS 或 ARS 旋转系统。
 
 支持在 `user_config.txt` 文件中修改部分默认配置，包括：
 - 基本参数（行数列数，下落速度，软降重力倍率 SDF，自动移动延迟 DAS，自动重复速率 ARR，移动重置时间，移动重置重置次数限制，Next 显示个数，是否允许 Hold，全隐，反重力等）
@@ -10,7 +10,7 @@
 
 ## 运行方法
 
-1. 使用集成开发环境或 g++ 等编译器对 `tetr.cpp`（`server.cpp`）进行编译：
+1. 使用集成开发环境或 g++ 等编译器对 `tetr.cpp`（`server.cpp`）进行编译（若使用 Releases 中下载的可执行文件则跳过这一步）：
 	- 命令提示符 (cmd) 编译方法：
 		1. 自行下载 C++ 编译器，下以 g++ 为例；
 		2. 打开 cmd，`cd` 到游戏文件夹内，执行：
@@ -62,8 +62,14 @@
 
 ## 附件
 
+### 可执行文件下载
+
+- Windows：<https://github.com/candy0014/Tetris/releases/latest/download/Tetris_Windows.zip>
+- Linux：<https://github.com/candy0014/Tetris/releases/latest/download/Tetris_Linux.zip>
+
 ### 键码表
 
 - Windows：详见 <https://blog.csdn.net/qq_42372031/article/details/105178789>；
 - Linux：详见 <https://blog.csdn.net/lbc2100/article/details/82380025>。
+
 
