@@ -14,8 +14,8 @@
 
 class KEYHELPER {
 public:
-	KEYHELPER(const char* device_path = "/dev/input/event0") 
-		: fd(-1), running(false) {
+	KEYHELPER():fd(-1), running(false){}
+	void init(const char* device_path = "/dev/input/event0") {
 		fd = open(device_path, O_RDONLY | O_NONBLOCK);
 		unsigned long keybits[KEY_MAX/8/sizeof(unsigned long)+1] = {0};
 		for (int i = 0; i < KEY_MAX; i++) {

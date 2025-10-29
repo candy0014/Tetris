@@ -1,24 +1,48 @@
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
 
+#include <iostream>
+#include <fstream>
 #include <map>
 #include <string>
 #include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
+int defval[15]={VK_LEFT,VK_RIGHT,VK_DOWN,VK_SPACE,VK_UP,'Z','A','C','R','P'};
 #endif
 #ifdef __linux__
-#include <fcntl.h>
-#include <unistd.h>
 #include <linux/input.h>
-#include "keyhelper.h"
-KEYHELPER keyhelper("/dev/input/event4"); // 请按实际情况配置，见 readme
+int defval[15]={KEY_LEFT,KEY_RIGHT,KEY_DOWN,KEY_SPACE,KEY_UP,KEY_Z,KEY_A,KEY_C,KEY_R,KEY_P};
 #endif
+std::string control_name[15]={"L","R","SD","HD","CW","CCW","F","H","RE","SET"};
 
 namespace UserConfig{
 
-// =========================================下为配置部分=========================================
+struct node{
+	std::string name;
+	int *a;
+	double *b;
+	std::string *c;
+	node(std::string _name="",int *_a=NULL,double *_b=NULL,std::string *_c=NULL){
+		name=_name,a=_a,b=_b,c=_c;
+	}
+};
+std::vector<node>var;
+void insert0(std::string name,int *a){var.emplace_back(node(name,a,NULL,NULL));}
+void insert1(std::string name,double *a){var.emplace_back(node(name,NULL,a,NULL));}
+void insert2(std::string name,std::string *a){var.emplace_back(node(name,NULL,NULL,a));}
+std::string erase_space(std::string s){
+	std::string t="";
+	int i=0,j=(int)s.length()-1;
+	while(i<(int)s.length()&&s[i]==' ') i++;
+	while(j>=0&&s[j]==' ') j--;
+	for(int k=i;k<=j;k++) t+=s[k];
+	return t;
+}
+
+std::string server_ip=""; //联机的服务端地址，若不联机则随意
+int LinuxKeyevent=4; //Linux 键盘操作获取位置，配置方法见 README。
 
 int Model=0; //0:ZEN；1:40-lines；2:Blitz；-2:Blitz（固定为自定速度不变，无得分倍率）
 int RacingDistance=40; //竞速行数
@@ -58,60 +82,91 @@ std::string RotationSystem="SRS+"; //旋转系统可选 SRS+/SRS/ARS
 int Autoplay=0; //是否开启 Autoplay
 double Autoplay_PPS=2.5; //Autoplay 的 PPS
 
-int WindowsVersion=10; //Windows版本
+int WindowsVersion=10; //Windows 版本
 int FSBorYPA=0; //开起来试试？（防教练用
-
-std::string server_id=""; //联机的服务端地址，若不联机则随意（需编译前配置）
 
 std::map<char,std::string>custom;
 
 struct Temp{
 	Temp(){
-		/*
-			键位配置：中括号内为【键值表】，等于号后为功能
-			功能：
-			"L": 向左移动
-			"R": 向右移动
-			"CW": 顺时针旋转
-			"CCW": 逆时针旋转
-			"F": 180 度旋转
-			"SD": 软降
-			"HD": 硬降
-			"H": Hold
-			"RE": 重开
-			"SET": 修改配置
-		*/
-
-		#ifdef _WIN32
-		custom[VK_LEFT]="L";
-		custom[VK_RIGHT]="R";
-		custom[VK_UP]="CW";
-		custom['Z']="CCW";
-		custom['A']="F";
-		custom[VK_DOWN]="SD";
-		custom[VK_SPACE]="HD";
-		custom['C']="H";
-		custom['R']="RE";
-		custom['P']="SET";
-		#endif
-		#ifdef __linux__
-		custom[KEY_LEFT]="L";
-		custom[KEY_RIGHT]="R";
-		custom[KEY_UP]="CW";
-		custom[KEY_X]="CW";
-		custom[KEY_Z]="CCW";
-		custom[KEY_A]="F";
-		custom[KEY_DOWN]="SD";
-		custom[KEY_SPACE]="HD";
-		custom[KEY_C]="H";
-		custom[KEY_R]="RE";
-		custom[KEY_P]="SET";
-		custom[KEY_LEFTSHIFT]="H";
-		#endif
+		insert0("Model",&UserConfig::Model);
+		insert0("Racing Distance",&UserConfig::RacingDistance);
+		insert1("Blitz Time",&UserConfig::BlitzTime);
+		insert0("Garbage Model",&UserConfig::GarbageModel);
+		insert0("Cheese Model",&UserConfig::CheeseModel);
+		insert0("Num of Hole",&UserConfig::HoleNum);
+		insert0("Layer Height",&UserConfig::LayerHeight);
+		insert1("Time Interval",&UserConfig::TimeInterval);
+		insert1("Cheese Messiness",&UserConfig::CheeseMessiness);
+		insert1("Garbage Multiple",&UserConfig::GarbageMultiple);
+		insert1("APM for Survival",&UserConfig::SurvivalAPM);
+		insert1("Speed",&UserConfig::Speed);
+		insert1("SDF",&UserConfig::SDF);
+		insert1("DAS",&UserConfig::DAS);
+		insert1("ARR",&UserConfig::ARR);
+		insert0("Width",&UserConfig::mapWidth);
+		insert0("Height",&UserConfig::mapHeight);
+		insert0("Num of Next",&UserConfig::NextNum);
+		insert0("Open Hold",&UserConfig::OpenHold);
+		insert0("Invisible",&UserConfig::Invisible);
+		insert0("Anti Gravity",&UserConfig::AntiGravity);
+		insert0("Ghost",&UserConfig::Ghost);
+		insert1("EPLD",&UserConfig::EPLD);
+		insert0("Limit of EPLD",&UserConfig::EPLDLim);
+		insert2("Rotation System",&UserConfig::RotationSystem);
+		insert0("Autoplay",&UserConfig::Autoplay);
+		insert1("PPS of Autoplay",&UserConfig::Autoplay_PPS);
+		insert0("Windows Version",&UserConfig::WindowsVersion);
+		insert0("FSBorYPA",&UserConfig::FSBorYPA);
+		insert2("Server IP",&UserConfig::server_ip);
+		insert0("Linux Keyevent",&UserConfig::LinuxKeyevent);
+		std::ifstream conf;
+		conf.open("user_config.txt",std::ios::in);
+		std::string Line;
+		while(getline(conf,Line)){
+			std::string name="",tmp="";
+			int fl=0;
+			for(int i=0;i<(int)Line.length();i++){
+				if(Line[i]=='='&&!fl){fl=1;continue;}
+				if(!fl) name+=Line[i];
+				else tmp+=Line[i];
+			}
+			name=erase_space(name),tmp=erase_space(tmp);
+			if(tmp=="") continue;
+			for(int i=0;i<(int)var.size();i++) if(var[i].name==name){
+				if(var[i].a!=NULL){
+					int v=0,flag=1;
+					for(int j=0;j<(int)tmp.length();j++){
+						if('0'<=tmp[j]&&tmp[j]<='9') v=v*10+tmp[j]-'0';
+						if(tmp[j]=='-'&&v==0&&flag==1) flag=-1;
+					}
+					(*var[i].a)=v*flag;
+				}
+				if(var[i].b!=NULL){
+					double v=0,w=1;int flag=0,flagg=1;
+					for(int j=0;j<(int)tmp.length();j++){
+						if('0'<=tmp[j]&&tmp[j]<='9'){
+							if(!flag) v=v*10+tmp[j]-'0';
+							else w/=10,v+=w*(tmp[j]-'0');
+						}
+						if(tmp[j]=='-'&&v==0&&flagg==1&&flag==0) flagg=-1;
+						if(tmp[j]=='.') flag=1;
+					}
+					(*var[i].b)=v*flagg;
+				}
+				if(var[i].c!=NULL) (*var[i].c)=tmp;
+				break;
+			}
+		}
+		conf.close();
+		conf.open("keybinding.txt",std::ios::in);
+		for(int i=0,val;i<10;i++){
+			conf>>val;
+			if(val==-1) val=defval[i];
+			custom[val]=control_name[i];
+		}
 	}
 };
-
-// =========================================上为配置部分=========================================
 
 static Temp temp;
 

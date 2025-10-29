@@ -17,6 +17,12 @@
 #define KEY_RIGHT VK_RIGHT
 #define KEY_ENTER VK_RETURN
 #endif
+#ifdef __linux__
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/input.h>
+#include "keyhelper.h"
+#endif
 
 namespace Config{
 
@@ -54,29 +60,34 @@ int EPLDLim;
 std::string RotationSystem;
 
 int WindowsVersion;
+#ifdef __linux__
+KEYHELPER keyhelper;
+#endif
 int FSBorYPA;
-
 constexpr int Margin=30;
 constexpr int mapHeightN = 8;
 std::map<char,std::string>custom;
 std::vector<char> KEY;
 
 Socket::UDP sock;
-std::string server_id="";
+std::string server_ip="";
 
 std::mt19937 rd(std::chrono::steady_clock::now().time_since_epoch().count());
 
 struct Temp{
 	Temp(){
+		#ifdef __linux__
+		keyhelper.init(("/dev/input/event"+std::to_string(UserConfig::LinuxKeyevent)).c_str());
+		#endif
 		custom=UserConfig::custom;
 		for(auto x:custom) KEY.emplace_back(x.first);
-		server_id=UserConfig::server_id;
+		server_ip=UserConfig::server_ip;
 		int my_port=rd()%5000+3001;
 		sock.bind(my_port);
 		sock.setNonBlocking();
 		std::string s="";
 		for(int i=1;i<=20;i++) s+=char(rd()%26+'a');
-		sock.send(server_id,3000,s);
+		sock.send(server_ip,3000,s);
 	}
 };
 

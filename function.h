@@ -92,7 +92,7 @@ namespace Function{
 		std::cout<<score;fflush(stdout);
 	}
 	void send(std::string s){
-		sock.send(server_id,3000,s);
+		sock.send(server_ip,3000,s);
 	}
 	std::string receive(){
 		return sock.receive().data;

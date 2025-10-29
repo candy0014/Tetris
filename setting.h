@@ -111,9 +111,6 @@ namespace Setting{
 		double t[128];
 		for(int i=0;i<128;i++) vis[i]=0,t[i]=0;
 		for(auto i:{KEY_UP,KEY_DOWN}) t[i]=timer.get(),vis[i]=-Interactive::keydown(i);
-		std::vector<char>letter;
-		for(int i=0;i<26;i++) letter.emplace_back(i+'A');
-		for(int i=0;i<10;i++) letter.emplace_back(i+'0');
 		while(1){
 			for(auto i:KEY) if(custom[i]=="RE"&&Interactive::keydown(i)) return;
 			for(auto i:{KEY_UP,KEY_DOWN,KEY_ENTER,KEY_LEFT,KEY_RIGHT}){
