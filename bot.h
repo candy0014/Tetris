@@ -149,7 +149,9 @@ bool getpos(map mp,std::vector<int>nex,int sx,int sy,int stype,int hold,int &ans
 	double tmp=ansscore;
 	if(hold!=-2){
 		if(hold==-1) return 1;
+		sx=-2,sy=(mapWidth-1)/2,stype=0;
 		if(Block::get_block(hold).check(sx,sy,stype,mp)){
+			if(fabs(Speed)<1e-8) while(Block::get_block(hold).check(sx+1,sy,stype,mp)) sx++;
 			bfs(mp,Block::get_block(hold),sx,sy,0);
 			if(ansscore>tmp){
 				flag_hold=1;

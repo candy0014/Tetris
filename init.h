@@ -19,7 +19,7 @@
 #endif
 
 namespace Init{
-short bl[105];
+short bl[210];
 short now_hold;
 int combo,b2b;
 long long score;
@@ -71,7 +71,11 @@ void init(){
 	SurvivalAPM=d_to_fit(UserConfig::SurvivalAPM,0,1800);
 	Autoplay=i_to_fit(UserConfig::Autoplay,0,1);
 	Autoplay_PPS=d_to_fit(UserConfig::Autoplay_PPS,0,100);
-	if(Autoplay) Speed=1e9+5;
+	if(Autoplay){
+		if(fabs(Speed)>1e-8) Speed=1e9+5;
+		else EPLD=1e18;
+	}
+	if(fabs(Speed)<1e-8) Ghost=0;
 	if(GarbageModel==6){
 		Function::clear();
 		Interactive::gotoxy(1,1);
@@ -117,13 +121,12 @@ void init(){
 	if(Model!=0) score=0;
 	if(FSBorYPA) Interactive::setcol(-1);
 	else Interactive::setcol(-3);
-	for(int i=0;i<105;i++) bl[i]=i%7;
+	for(int i=0;i<210;i++) bl[i]=i%7;
 	if(GarbageModel==6){
 		long long tmp=0;
 		std::string s=Function::receive_();
 		for(int i=0;s[i];i++) tmp=tmp*10+s[i]-'0';
 		rd.seed((unsigned int)tmp);
-		// system("clear");Interactive::setcol(-3);Interactive::gotoxy(1,1);std::cout<<tmp<<" "<<rd()<<"\n";//exit(0);
 	}
 	for(int i=0;i<15;i++) Function::shuffle(bl,i*7,(i+1)*7);
 	Garbage::init();

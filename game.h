@@ -96,18 +96,18 @@ void game(){
 	if(GarbageModel==6){
 		Function::send("start6");
 	}
-	for(int i=0;;i=(i+1)%105){
+	for(int i=0;;i=(i+1)%210){
 		if(i%7==0){
-			for(int j=(i+98)%105,k=0;k<7;j++,k++) Init::bl[j]=k;
-			Function::shuffle(Init::bl,(i+98)%105,(i+98)%105+7);
+			for(int j=(i+105)%210,k=0;k<7;j++,k++) Init::bl[j]=k;
+			Function::shuffle(Init::bl,(i+105)%210,(i+105)%210+7);
 		}
 		setvbuf(stdout,NULL,_IOFBF,4096);
 		Init::next_block.clear();
 		Init::next_block.emplace_back(Init::bl[i]);
 		for(int j=0;j<NextNum;j++){
-			Block::get_block(Init::bl[(i+j)%105]).put_next(j,0);
-			Block::get_block(Init::bl[(i+j+1)%105]).put_next(j);
-			Init::next_block.emplace_back(Init::bl[(i+j+1)%105]);
+			Block::get_block(Init::bl[(i+j)%210]).put_next(j,0);
+			Block::get_block(Init::bl[(i+j+1)%210]).put_next(j);
+			Init::next_block.emplace_back(Init::bl[(i+j+1)%210]);
 		}
 		setvbuf(stdout,NULL,_IONBF,0);
 		int res=Place::play(board,Block::get_block(Init::bl[i]),flag);

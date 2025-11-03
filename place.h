@@ -119,7 +119,14 @@ int play(map &mp,Block::block B,int flag_h=0){
 			if(!B.check(x+1,y,type,mp)) break;
 		}
 		if(timer.get()-tim>Speed){
-			if(B.check(x+1,y,type,mp)) B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get(),last_op=0;
+			if(fabs(Speed)<1e-8){
+				if(B.check(x+1,y,type,mp)){
+					B.put(x,y,type,mp,0);
+					while(B.check(x+1,y,type,mp)) x++,tim=timer.get(),last_op=0;
+					B.put(x,y,type,mp);
+				}
+			}
+			else if(B.check(x+1,y,type,mp)) B.put(x,y,type,mp,0),x++,B.put(x,y,type,mp),tim=timer.get(),last_op=0;
 		}
 		int last_x=x,last_y=y,last_type=type;
 		bool flag_hd=0;
