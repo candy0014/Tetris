@@ -85,7 +85,7 @@ double Autoplay_PPS=2.5; //Autoplay 的 PPS
 int WindowsVersion=10; //Windows 版本
 int FSBorYPA=0; //开起来试试？（防教练用
 
-std::map<char,std::string>custom;
+std::map<int,std::string>custom;
 
 struct Temp{
 	Temp(){

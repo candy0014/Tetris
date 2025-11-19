@@ -36,9 +36,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 	}
 	B.put(x,y,type,mp);
 	double tim=timer.get();
-	int vis[128];
-	double t[128];
-	for(int i=0;i<128;i++) vis[i]=0,t[i]=0;
+	int vis[256];
+	double t[256];
+	for(int i=0;i<256;i++) vis[i]=0,t[i]=0;
 	for(auto ii:KEY){
 		int i=(int)ii;
 		vis[i]=0,t[i]=timer.get();
@@ -475,8 +475,9 @@ int play(map &mp,Block::block B,int flag_h=0){
 			if(!mini_flag) basic=cnt_clear*2;
 			else basic=(cnt_clear>=2);
 		}
-		int leveltable[10]={1,3,8,24,67,185,504,1370,1000000000};
-		for(int i=0;i<=8;i++) if(Init::b2b<=leveltable[i]){level_b2b=i;break;}
+		// int leveltable[10]={1,3,8,24,67,185,504,1370,1000000000};
+		// for(int i=0;i<=8;i++) if(Init::b2b<=leveltable[i]){level_b2b=i;break;}
+		if(Init::b2b>=2) level_b2b=1;
 		atk=(basic+level_b2b)*(1+(Init::combo-1)*0.25);
 		if(!basic&&!level_b2b){
 			if(Init::combo<=2) atk=0;

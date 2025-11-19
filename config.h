@@ -66,8 +66,8 @@ KEYHELPER keyhelper;
 int FSBorYPA;
 constexpr int Margin=30;
 constexpr int mapHeightN = 8;
-std::map<char,std::string>custom;
-std::vector<char> KEY;
+std::map<int,std::string>custom;
+std::vector<int> KEY;
 
 Socket::UDP sock;
 std::string server_ip="";

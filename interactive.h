@@ -6,7 +6,7 @@
 
 namespace Interactive{
 
-bool keydown(char g) {
+bool keydown(int g) {
 	#ifdef _WIN32
 	return GetAsyncKeyState(g) & 0x8000;
 	#endif
